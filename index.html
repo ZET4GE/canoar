@@ -1,24 +1,70 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canoar - Bienvenidos</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyberpunk Web</title>
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: #00ffcc;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      animation: glow 1.5s infinite;
+    }
+
+    h1 {
+      font-size: 4em;
+      margin: 0;
+      color: #ff0080;
+      text-shadow: 0 0 5px #ff0080, 0 0 10px #ff0080, 0 0 20px #ff0080, 0 0 40px #ff0080;
+      transition: 0.5s;
+    }
+
+    h1:hover {
+      color: #00ffcc;
+      text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 40px #00ffcc;
+    }
+
+    @keyframes glow {
+      0% { text-shadow: 0 0 5px #ff0080, 0 0 10px #ff0080, 0 0 20px #ff0080, 0 0 40px #ff0080; }
+      50% { text-shadow: 0 0 10px #ff0080, 0 0 20px #ff0080, 0 0 40px #ff0080, 0 0 80px #ff0080; }
+      100% { text-shadow: 0 0 5px #ff0080, 0 0 10px #ff0080, 0 0 20px #ff0080, 0 0 40px #ff0080; }
+    }
+
+    .edit-title {
+      background: #333;
+      border: none;
+      color: #00ffcc;
+      padding: 10px;
+      font-size: 1.5em;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>¡Bienvenidos a Canoar!</h1>
-        <p>Automatiza la gestión de tus mensajes en WhatsApp</p>
-    </header>
+  <div class="container">
+    <h1 id="cyberpunk-title">SANTI SE FUMA TODO EL FASO QUE INTENTA VENDER</h1>
+    <input class="edit-title" type="text" placeholder="Editar Título" oninput="updateTitle(this.value)">
+  </div>
 
-    <section>
-        <p>Inicia sesión para personalizar tus mensajes automáticos y administrar tus números de WhatsApp.</p>
-        <a href="/login" class="btn">Iniciar Sesión</a>
-    </section>
-
-    <footer>
-        <p>&copy; 2024 Canoar. Todos los derechos reservados.</p>
-    </footer>
+  <script>
+    function updateTitle(newTitle) {
+      const titleElement = document.getElementById('cyberpunk-title');
+      titleElement.textContent = newTitle || 'Bienvenido a la Web Cyberpunk';
+    }
+  </script>
 </body>
 </html>
+
