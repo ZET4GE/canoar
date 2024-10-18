@@ -68,16 +68,35 @@
 </head>
 <body>
   <div class="container">
-    <h1 id="cyberpunk-title">Alexi tarzan de maceta</h1>
+    <h1 id="cyberpunk-title">Cargando...</h1>
     <label for="title-editor">Editar Título:</label>
     <input id="title-editor" class="edit-title" type="text" placeholder="Editar Título" oninput="updateTitle(this.value)">
   </div>
 
   <script defer>
+    // Función para cargar el título guardado desde localStorage al cargar la página
+    function loadTitle() {
+      const savedTitle = localStorage.getItem('cyberpunkTitle');
+      const titleElement = document.getElementById('cyberpunk-title');
+
+      if (savedTitle) {
+        titleElement.textContent = savedTitle;
+      } else {
+        titleElement.textContent = 'Bienvenido a la Web Cyberpunk';
+      }
+    }
+
+    // Función para actualizar el título y guardarlo en localStorage
     function updateTitle(newTitle) {
       const titleElement = document.getElementById('cyberpunk-title');
-      titleElement.textContent = newTitle.trim() || 'Bienvenido a la Web Cyberpunk';
+      const trimmedTitle = newTitle.trim();
+
+      titleElement.textContent = trimmedTitle || 'Bienvenido a la Web Cyberpunk';
+      localStorage.setItem('cyberpunkTitle', titleElement.textContent); // Guardar en localStorage
     }
+
+    // Cargar el título guardado cuando se carga la página
+    window.onload = loadTitle;
   </script>
 </body>
 </html>
