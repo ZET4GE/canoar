@@ -3,11 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Web Cyberpunk con estilo retro futurista. Personaliza el título y experimenta con animaciones interactivas.">
   <title>Cyberpunk Web</title>
   <style>
+    :root {
+      --primary-color: #ff0080;
+      --hover-color: #00ffcc;
+      --bg-color: #0d0d0d;
+      --text-shadow-color: rgba(255, 0, 128, 0.8);
+    }
+
     body {
-      background-color: #0d0d0d;
-      color: #00ffcc;
+      background-color: var(--bg-color);
+      color: var(--hover-color);
       font-family: 'Courier New', Courier, monospace;
       margin: 0;
       padding: 0;
@@ -26,45 +34,50 @@
     h1 {
       font-size: 4em;
       margin: 0;
-      color: #ff0080;
-      text-shadow: 0 0 5px #ff0080, 0 0 10px #ff0080, 0 0 20px #ff0080, 0 0 40px #ff0080;
+      color: var(--primary-color);
+      text-shadow: 0 0 5px var(--primary-color), 0 0 10px var(--text-shadow-color), 0 0 20px var(--text-shadow-color), 0 0 40px var(--text-shadow-color);
       transition: 0.5s;
     }
 
     h1:hover {
-      color: #00ffcc;
-      text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 40px #00ffcc;
+      color: var(--hover-color);
+      text-shadow: 0 0 5px var(--hover-color), 0 0 10px var(--hover-color), 0 0 20px var(--hover-color), 0 0 40px var(--hover-color);
     }
 
     @keyframes glow {
-      0% { text-shadow: 0 0 5px #ff0080, 0 0 10px #ff0080, 0 0 20px #ff0080, 0 0 40px #ff0080; }
-      50% { text-shadow: 0 0 10px #ff0080, 0 0 20px #ff0080, 0 0 40px #ff0080, 0 0 80px #ff0080; }
-      100% { text-shadow: 0 0 5px #ff0080, 0 0 10px #ff0080, 0 0 20px #ff0080, 0 0 40px #ff0080; }
+      0%, 100% { text-shadow: 0 0 5px var(--primary-color), 0 0 10px var(--text-shadow-color), 0 0 20px var(--text-shadow-color), 0 0 40px var(--text-shadow-color); }
+      50% { text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--text-shadow-color), 0 0 40px var(--text-shadow-color), 0 0 80px var(--text-shadow-color); }
     }
 
     .edit-title {
       background: #333;
       border: none;
-      color: #00ffcc;
+      color: var(--hover-color);
       padding: 10px;
       font-size: 1.5em;
       border-radius: 5px;
       margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 1.2em;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1 id="cyberpunk-title">Alexi tarzan de maceta</h1>
-    <input class="edit-title" type="text" placeholder="Editar Título" oninput="updateTitle(this.value)">
+    <label for="title-editor">Editar Título:</label>
+    <input id="title-editor" class="edit-title" type="text" placeholder="Editar Título" oninput="updateTitle(this.value)">
   </div>
 
-  <script>
+  <script defer>
     function updateTitle(newTitle) {
       const titleElement = document.getElementById('cyberpunk-title');
-      titleElement.textContent = newTitle || 'Bienvenido a la Web Cyberpunk';
+      titleElement.textContent = newTitle.trim() || 'Bienvenido a la Web Cyberpunk';
     }
   </script>
 </body>
 </html>
-
