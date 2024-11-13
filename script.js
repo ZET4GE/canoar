@@ -5,10 +5,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const livesDisplay = document.getElementById('lives');
     const highScoreDisplay = document.getElementById('high-score');
     const freezeBtn = document.getElementById('freeze-btn');
+    const shieldBtn = document.getElementById('shield-btn');
     const clickSound = document.getElementById('click-sound');
     const loseLifeSound = document.getElementById('lose-life-sound');
     const bonusSound = document.getElementById('bonus-sound');
-    
+    const shieldSound = document.getElementById('shield-sound');
+
     let score = 0;
     let lives = 3;
     let highScore = localStorage.getItem('highScore') || 0;
@@ -17,8 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let countdownInterval;
     let moveInterval;
     let freezeAvailable = true;
+    let shieldAvailable = true;
     let freezeCooldown = 10;
-    let bonusInterval;
+    let shieldCooldown = 15;
+    let multiplier = 1;
+    let consecutiveHits = 0;
 
     highScoreDisplay.textContent = `Mejor Puntuación: ${highScore}`;
 
@@ -45,15 +50,41 @@ document.addEventListener('DOMContentLoaded', () => {
             if (countdown <= 0) {
                 clearInterval(countdownInterval);
                 clearInterval(moveInterval);
-                loseLife();
+                if (shieldAvailable) {
+                    activateShield();
+                } else {
+                    loseLife();
+                }
             }
         }, 1000);
+    }
+
+    function activateShield() {
+        shieldAvailable = false;
+        shieldSound.play();
+        shieldBtn.classList.add('shield-active');
+        shieldBtn.textContent = 'Escudo Activo';
+        setTimeout(() => {
+            shieldBtn.classList.remove('shield-active');
+            shieldBtn.textContent = 'Escudo (Recarga en: 0s)';
+            let cooldown = shieldCooldown;
+            const shieldInterval = setInterval(() => {
+                shieldBtn.textContent = `Escudo (Recarga en: ${cooldown--}s)`;
+                if (cooldown < 0) {
+                    clearInterval(shieldInterval);
+                    shieldAvailable = true;
+                    shieldBtn.textContent = 'Escudo Disponible';
+                }
+            }, 1000);
+        }, 2000);
     }
 
     function loseLife() {
         lives--;
         livesDisplay.textContent = `Vidas: ${lives}`;
         loseLifeSound.play();
+        multiplier = 1; // Restablece el multiplicador en cada vida perdida
+        consecutiveHits = 0;
         if (lives <= 0) {
             if (score > highScore) {
                 highScore = score;
@@ -71,12 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
         score = 0;
         lives = 3;
         speed = 2000;
+        multiplier = 1;
+        consecutiveHits = 0;
         freezeAvailable = true;
+        shieldAvailable = true;
         scoreDisplay.textContent = `Puntos: ${score}`;
         livesDisplay.textContent = `Vidas: ${lives}`;
         freezeBtn.textContent = 'Congelar (Recarga en: 0s)';
-        clearInterval(bonusInterval);
-        bonus.style.display = 'none';
+        shieldBtn.textContent = 'Escudo (Recarga en: 0s)';
         startGame();
     }
 
@@ -85,40 +118,31 @@ document.addEventListener('DOMContentLoaded', () => {
         startCountdown();
         clearInterval(moveInterval);
         moveInterval = setInterval(moveText, speed);
-
-        // Mostrar bono aleatorio cada 10 segundos
-        bonusInterval = setInterval(showBonus, 10000);
+        setInterval(showBonus, 10000);
     }
 
-    // Evento de clic en el texto para incrementar el puntaje
     text.addEventListener('click', () => {
-        score++;
+        score += multiplier; // Aplica el multiplicador
+        consecutiveHits++;
+        if (consecutiveHits % 5 === 0) multiplier++; // Incrementa el multiplicador cada 5 aciertos consecutivos
         scoreDisplay.textContent = `Puntos: ${score}`;
         clickSound.play();
         
-        // Aumenta la velocidad después de cada clic y reduce el intervalo de movimiento
         speed *= 0.95;
         clearInterval(moveInterval);
         moveInterval = setInterval(moveText, speed);
 
         moveText();
         startCountdown();
-
-        // Incrementa la dificultad después de cada 10 puntos
-        if (score % 10 === 0) {
-            increaseDifficulty();
-        }
     });
 
-    // Evento de clic en el bono para puntos extra y sonido
     bonus.addEventListener('click', () => {
-        score += 5; // Bono de 5 puntos
+        score += 5 * multiplier; // Aplica el multiplicador al bono
         scoreDisplay.textContent = `Puntos: ${score}`;
         bonusSound.play();
         bonus.style.display = 'none';
     });
 
-    // Botón de congelación para pausar el movimiento del texto
     freezeBtn.addEventListener('click', () => {
         if (freezeAvailable) {
             clearInterval(moveInterval);
@@ -130,21 +154,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (cooldown < 0) {
                     clearInterval(freezeInterval);
                     freezeAvailable = true;
-                    freezeBtn.textContent = 'Congelar (Disponible)';
+                    freezeBtn.textContent = 'Congelar Disponible';
                     moveInterval = setInterval(moveText, speed);
                 }
             }, 1000);
         }
     });
 
-    function increaseDifficulty() {
-        speed *= 0.9; // Reduce el intervalo para acelerar el movimiento
-        text.style.fontSize = `${3 - score * 0.02}rem`; // Reduce el tamaño del texto
-        clearInterval(moveInterval);
-        moveInterval = setInterval(moveText, speed);
-    }
-
-    // Inicia el juego al cargar la página
     startGame();
 });
+
 
