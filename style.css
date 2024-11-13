@@ -54,3 +54,9 @@ body {
     50% { opacity: 0.5; }
 }
 
+.shield-active {
+    border: 2px solid #00ff99;
+    background: rgba(0, 255, 153, 0.3);
+}
+
+
