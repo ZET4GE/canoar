@@ -18,7 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let moveInterval;
     let freezeAvailable = true;
     let freezeCooldown = 10;
-    
+    let bonusInterval;
+
     highScoreDisplay.textContent = `Mejor Puntuación: ${highScore}`;
 
     function moveText() {
@@ -74,6 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
         scoreDisplay.textContent = `Puntos: ${score}`;
         livesDisplay.textContent = `Vidas: ${lives}`;
         freezeBtn.textContent = 'Congelar (Recarga en: 0s)';
+        clearInterval(bonusInterval);
+        bonus.style.display = 'none';
         startGame();
     }
 
@@ -83,4 +86,65 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(moveInterval);
         moveInterval = setInterval(moveText, speed);
 
-        // Mostrar bono aleatorio cada 10
+        // Mostrar bono aleatorio cada 10 segundos
+        bonusInterval = setInterval(showBonus, 10000);
+    }
+
+    // Evento de clic en el texto para incrementar el puntaje
+    text.addEventListener('click', () => {
+        score++;
+        scoreDisplay.textContent = `Puntos: ${score}`;
+        clickSound.play();
+        
+        // Aumenta la velocidad después de cada clic y reduce el intervalo de movimiento
+        speed *= 0.95;
+        clearInterval(moveInterval);
+        moveInterval = setInterval(moveText, speed);
+
+        moveText();
+        startCountdown();
+
+        // Incrementa la dificultad después de cada 10 puntos
+        if (score % 10 === 0) {
+            increaseDifficulty();
+        }
+    });
+
+    // Evento de clic en el bono para puntos extra y sonido
+    bonus.addEventListener('click', () => {
+        score += 5; // Bono de 5 puntos
+        scoreDisplay.textContent = `Puntos: ${score}`;
+        bonusSound.play();
+        bonus.style.display = 'none';
+    });
+
+    // Botón de congelación para pausar el movimiento del texto
+    freezeBtn.addEventListener('click', () => {
+        if (freezeAvailable) {
+            clearInterval(moveInterval);
+            freezeAvailable = false;
+            let cooldown = freezeCooldown;
+
+            const freezeInterval = setInterval(() => {
+                freezeBtn.textContent = `Congelar (Recarga en: ${cooldown--}s)`;
+                if (cooldown < 0) {
+                    clearInterval(freezeInterval);
+                    freezeAvailable = true;
+                    freezeBtn.textContent = 'Congelar (Disponible)';
+                    moveInterval = setInterval(moveText, speed);
+                }
+            }, 1000);
+        }
+    });
+
+    function increaseDifficulty() {
+        speed *= 0.9; // Reduce el intervalo para acelerar el movimiento
+        text.style.fontSize = `${3 - score * 0.02}rem`; // Reduce el tamaño del texto
+        clearInterval(moveInterval);
+        moveInterval = setInterval(moveText, speed);
+    }
+
+    // Inicia el juego al cargar la página
+    startGame();
+});
+
