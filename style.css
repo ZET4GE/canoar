@@ -1,0 +1,42 @@
+body {
+    background-color: #0d0d0d;
+    color: #00ff99;
+    font-family: 'Courier New', Courier, monospace;
+    overflow: hidden;
+}
+
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.text {
+    position: absolute;
+    font-size: 3rem;
+    color: #00ff99;
+    animation: moveText 5s infinite;
+    opacity: 0.8;
+}
+
+@keyframes moveText {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(50vw, 20vh); }
+    50% { transform: translate(100vw, 50vh); }
+    75% { transform: translate(50vw, 80vh); }
+    100% { transform: translate(0, 0); }
+}
+
+.text:nth-child(odd) {
+    color: #ff00ff;
+    animation-duration: 6s;
+}
+
+.text:nth-child(even) {
+    color: #00ffff;
+    animation-duration: 4s;
+}
