@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loseLifeSound = document.getElementById('lose-life-sound');
     const bonusSound = document.getElementById('bonus-sound');
     const shieldSound = document.getElementById('shield-sound');
-
+    
     let score = 0;
     let lives = 3;
     let highScore = localStorage.getItem('highScore') || 0;
@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let shieldCooldown = 15;
     let multiplier = 1;
     let consecutiveHits = 0;
+    let eventActive = false;
 
     highScoreDisplay.textContent = `Mejor Puntuación: ${highScore}`;
 
@@ -31,15 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const x = Math.random() * (window.innerWidth - text.offsetWidth);
         const y = Math.random() * (window.innerHeight - text.offsetHeight);
         text.style.transform = `translate(${x}px, ${y}px)`;
-    }
-
-    function showBonus() {
-        const x = Math.random() * (window.innerWidth - bonus.offsetWidth);
-        const y = Math.random() * (window.innerHeight - bonus.offsetHeight);
-        bonus.style.transform = `translate(${x}px, ${y}px)`;
-        bonus.style.display = 'block';
-
-        setTimeout(() => bonus.style.display = 'none', 3000);
     }
 
     function startCountdown() {
@@ -110,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         livesDisplay.textContent = `Vidas: ${lives}`;
         freezeBtn.textContent = 'Congelar (Recarga en: 0s)';
         shieldBtn.textContent = 'Escudo (Recarga en: 0s)';
+        clearInterval(moveInterval);
         startGame();
     }
 
@@ -118,13 +111,67 @@ document.addEventListener('DOMContentLoaded', () => {
         startCountdown();
         clearInterval(moveInterval);
         moveInterval = setInterval(moveText, speed);
-        setInterval(showBonus, 10000);
+        
+        setInterval(() => {
+            if (!eventActive) triggerRandomEvent();
+        }, 15000); // Lanza un evento aleatorio cada 15 segundos
+    }
+
+    function triggerRandomEvent() {
+        eventActive = true;
+        const eventType = Math.floor(Math.random() * 3); // Tres tipos de eventos aleatorios
+
+        switch (eventType) {
+            case 0: // Lluvia de puntos
+                text.style.color = "#ffff00";
+                alert("¡Lluvia de Puntos! Haz clic rápido para obtener puntos extra");
+                let pointRainInterval = setInterval(() => {
+                    score += 1 * multiplier;
+                    scoreDisplay.textContent = `Puntos: ${score}`;
+                }, 500);
+                setTimeout(() => {
+                    clearInterval(pointRainInterval);
+                    text.style.color = "#ff00ff";
+                    eventActive = false;
+                }, 5000);
+                break;
+            
+            case 1: // Velocidad variable
+                alert("¡Velocidad Variable! El texto cambiará de velocidad");
+                speed = Math.random() * 1500 + 500; // Cambia la velocidad aleatoriamente
+                clearInterval(moveInterval);
+                moveInterval = setInterval(moveText, speed);
+                setTimeout(() => {
+                    speed = 2000; // Restablece la velocidad normal
+                    clearInterval(moveInterval);
+                    moveInterval = setInterval(moveText, speed);
+                    eventActive = false;
+                }, 5000);
+                break;
+
+            case 2: // Inversión de controles
+                alert("¡Inversión de Movimiento! El texto se moverá de forma impredecible");
+                moveText = function () { // Invierte el movimiento del texto
+                    const x = -Math.random() * (window.innerWidth - text.offsetWidth);
+                    const y = -Math.random() * (window.innerHeight - text.offsetHeight);
+                    text.style.transform = `translate(${x}px, ${y}px)`;
+                };
+                setTimeout(() => {
+                    moveText = function () {
+                        const x = Math.random() * (window.innerWidth - text.offsetWidth);
+                        const y = Math.random() * (window.innerHeight - text.offsetHeight);
+                        text.style.transform = `translate(${x}px, ${y}px)`;
+                    };
+                    eventActive = false;
+                }, 5000);
+                break;
+        }
     }
 
     text.addEventListener('click', () => {
-        score += multiplier; // Aplica el multiplicador
+        score += multiplier;
         consecutiveHits++;
-        if (consecutiveHits % 5 === 0) multiplier++; // Incrementa el multiplicador cada 5 aciertos consecutivos
+        if (consecutiveHits % 5 === 0) multiplier++;
         scoreDisplay.textContent = `Puntos: ${score}`;
         clickSound.play();
         
@@ -136,19 +183,11 @@ document.addEventListener('DOMContentLoaded', () => {
         startCountdown();
     });
 
-    bonus.addEventListener('click', () => {
-        score += 5 * multiplier; // Aplica el multiplicador al bono
-        scoreDisplay.textContent = `Puntos: ${score}`;
-        bonusSound.play();
-        bonus.style.display = 'none';
-    });
-
     freezeBtn.addEventListener('click', () => {
         if (freezeAvailable) {
             clearInterval(moveInterval);
             freezeAvailable = false;
             let cooldown = freezeCooldown;
-
             const freezeInterval = setInterval(() => {
                 freezeBtn.textContent = `Congelar (Recarga en: ${cooldown--}s)`;
                 if (cooldown < 0) {
@@ -163,5 +202,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     startGame();
 });
-
 
