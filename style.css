@@ -1,62 +1,182 @@
+/* CSS Basico */
+@import url('https://fonts.googleapis.com/css?family=Exo:100,200,400');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300');
+
 body {
     margin: 0;
-    background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
-    font-family: 'Courier New', Courier, monospace;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    padding: 0;
+    font-family: Arial;
+    font-size: 12px;
 }
 
-#score, #lives, #high-score {
-    font-size: 1.5rem;
-    color: #00ff99;
-    text-shadow: 0 0 10px #00ff99, 0 0 20px #00ff99;
-    margin: 0.5rem;
+.body {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('http://ginva.com/wp-content/uploads/2012/07/city-skyline-wallpapers-008.jpg');
+    background-size: cover;
+    filter: blur(5px);
+    z-index: -1;
 }
 
-#freeze-btn {
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
+.grad {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 100%);
+    z-index: -1;
+}
+
+.header {
+    text-align: center;
     color: #fff;
-    background: #00ff99;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 1rem;
+    font-family: 'Exo', sans-serif;
+    font-size: 35px;
+    font-weight: 200;
+    margin-top: 20px;
+}
+
+.header div span {
+    color: #5379fa;
 }
 
 .container {
-    position: relative;
-    width: 100vw;
-    height: 80vh;
+    max-width: 400px;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.text, .bonus {
-    position: absolute;
-    font-size: 3rem;
-    color: #ff00ff;
-    text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+label {
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.primary-btn, .secondary-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
-    transition: transform 0.2s ease;
+    transition: background-color 0.3s;
 }
 
-.bonus {
-    display: none;
-    color: #00ff00;
-    font-size: 2.5rem;
-    animation: blink 1s infinite;
+.primary-btn {
+    background-color: #4a90e2;
+    color: #fff;
+    margin-top: 10px;
 }
 
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+.primary-btn:hover {
+    background-color: #357abd;
 }
 
-.shield-active {
-    border: 2px solid #00ff99;
-    background: rgba(0, 255, 153, 0.3);
+.secondary-btn {
+    background-color: #50c878;
+    color: #fff;
+    margin-top: 10px;
 }
 
+.secondary-btn:hover {
+    background-color: #3e8e41;
+}
+
+textarea {
+    resize: none;
+}
+
+:root {
+    --background-color: #ffffff;
+    --text-color: #000000;
+    --button-bg-color: #4CAF50;
+    --button-text-color: #ffffff;
+}
+
+.dark-theme {
+    --background-color: #121212;
+    --text-color: #ffffff;
+    --button-bg-color: #3b3b3b;
+    --button-text-color: #ffffff;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Exo', sans-serif;
+}
+
+button {
+    background-color: var(--button-bg-color);
+    color: var(--button-text-color);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: var(--button-bg-color);
+    color: var(--button-text-color);
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: var(--button-bg-color);
+    color: var(--text-color);
+}
+
+.copy-btn {
+    background-color: var(--button-bg-color);
+    color: var(--button-text-color);
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.copy-btn:hover {
+    background-color: #3b3b3b;
+}
 
