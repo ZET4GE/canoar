@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alta de ONT</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Exo:100,200,400&display=swap" rel="stylesheet">
+    <script>
+         // Datos de VLANs
+         const vlansInternet = {
+            "MXK1": [2101, 2102, 2103, 2104, 2105, 2106, 2107, 2108, 2109, 2110, 2111, 2112, 2113, 2114],
+            "MXK2": [2201, 2202, 2203, 2204, 2205, 2206, 2207, 2208, 2209, 2210, 2211, 2212, 2213, 2214],
+            "MXK3": [2301, 2302, 2303, 2304, 2305, 2306, 2307, 2308, 2309, 2310, 2311, 2312, 2313, 2314]
+        };
+
+        const vlansTelefonia = {
+            "MXK1": [1012, 1022, 1032, 1042, 1052, 1062, 1072, 1082, 1092, 1102, 1112, 1122, 1132, 1142],
+            "MXK2": [1212, 1222, 1232, 1242, 1252, 1262, 1272, 1282, 1292, 1202, 1212, 1222, 1232, 1242],
+            "MXK3": [1312, 1322, 1332, 1342, 1352, 1362, 1372, 1382, 1392, 1302, 1312, 1322, 1332, 1342]
+        };
+
+        const vlansIPTV = {
+            "MXK1": [1011, 1011, 1011, 1011, 1011, 1011, 1011, 1081, 1081, 1081, 1081, 1081, 1081, 1081],
+            "MXK2": [1211, 1211, 1211, 1211, 1211, 1211, 1211, 1281, 1281, 1281, 1281, 1281, 1281, 1281],
+            "MXK3": [1411, 1411, 1411, 1411, 1411, 1411, 1411, 1481, 1481, 1481, 1481, 1481, 1481, 1481]
+        };
+
+        function updateVlan() {
+            const olt = document.getElementById('olt').value;
+            const placa = parseInt(document.getElementById('placa').value) - 1; // Convertir a índice (0-13)
+
+            // Verificar selección de OLT y tipo de servicio
+            if (olt && placa >= 0 && placa < 14) {
+                // Actualizar la VLAN según el servicio seleccionado
+                if (document.getElementById('internet').checked) {
+                    document.getElementById('vlanInternet').value = vlansInternet[olt][placa];
+                }
+                if (document.getElementById('telefono').checked) {
+                    document.getElementById('vlanTelefonia').value = vlansTelefonia[olt][placa];
+                }
+                if (document.getElementById('iptv').checked) {
+                    document.getElementById('vlanIPTV').value = vlansIPTV[olt][placa];
+                }
+            }
+        }
+
+
+
+
+        function toggleServiceFields() {
+            document.getElementById('internetFields').style.display = document.getElementById('internet').checked ? 'block' : 'none';
+            document.getElementById('iptvFields').style.display = document.getElementById('iptv').checked ? 'block' : 'none';
+            document.getElementById('telefonoFields').style.display = document.getElementById('telefono').checked ? 'block' : 'none';
+
+            // Ocultar las secciones de comandos generados hasta que se haga clic en "Generar Comandos"
+            document.getElementById('comandosInternet').style.display = 'none';
+            document.getElementById('comandosTelefonia').style.display = 'none';
+            document.getElementById('comandosIPTV').style.display = 'none';
+        }
+
+        function generarComando() {
+            const equipo = document.getElementById('equipo').value;
+            const placa = document.getElementById('placa').value;
+            const puerto = parseInt(document.getElementById('puerto').value);
+
+            // Variables para cada comando de Internet, Telefonía e IPTV
+            let comandoSeteoONT = '', comandoBridgeONT = '', comandoPPPoE = '', comandoWiFi24G = '', comandoWiFi5G = '', comandoBridgeMGMT = '';
+            let comandoBridgeTelefonia = '', comandoTelefonia = '';
+            let comandoBridgeIPTV = '';
+
+            // Mostrar u ocultar las secciones de comandos generados solo si los servicios están seleccionados
+            let mostrarInternet = false, mostrarTelefonia = false, mostrarIPTV = false;
+
+            // Comandos para Internet
+            if (document.getElementById('internet').checked) {
+                const fsan = document.getElementById('fsan').value;
+                const meprof = document.getElementById('meprof').value;
+                const gemInternet = 600 + puerto;
+                const vlanInternet = document.getElementById('vlanInternet').value;
+                const ethPortsInternet = document.getElementById('ethPortsInternet').value;
+                const pppoeUser = document.getElementById('pppoeUser').value;
+                const pppoePassword = document.getElementById('pppoePassword').value;
+                const ssid24 = document.getElementById('ssid24').value;
+                const wifiPassword24 = document.getElementById('wifiPassword24').value;
+                const ssid5 = document.getElementById('ssid5').value;
+                const wifiPassword5 = document.getElementById('wifiPassword5').value;
+
+                comandoSeteoONT = `gpononu set ${equipo}/${placa}/${puerto} vendorid ZNTS serno fsan ${fsan} meprof ${meprof}`;
+                comandoBridgeONT = `bridge add 1-${equipo}-${placa}-${puerto}/gpononu gem ${gemInternet} downlink vlan ${vlanInternet} tagged rg-bpppoe eth [${ethPortsInternet}] wlan 1 wlan 5`;
+                comandoPPPoE = `cpe rg wan modify ${equipo}/${placa}/${puerto} vlan ${vlanInternet} pppoe-usr-id ${pppoeUser} pppoe-password ${pppoePassword}`;
+                comandoWiFi24G = `cpe wlan add ${equipo}/${placa}/${puerto}/1 ssid ${ssid24} encrypt-key ${wifiPassword24} wlan-com-profile 2 wlan-com-adv-profile 1`;
+                comandoWiFi5G = `cpe wlan add ${equipo}/${placa}/${puerto}/5 ssid ${ssid24}5G encrypt-key ${wifiPassword24} wlan-com-profile 2 wlan-com-adv-profile 1`;
+                comandoBridgeMGMT = `bridge add 1-${equipo}-${placa}-${puerto}/gpononu downlink-data vlan 1810 ipktrule 9988 rg-bridged tagged mgmt`;
+
+                // Mostrar los comandos de Internet
+                mostrarInternet = true;
+            }
+
+            // Comandos para IPTV
+            if (document.getElementById('iptv').checked) {
+                const gemIPTV = 900 + puerto;
+                const vlanIPTV = document.getElementById('vlanIPTV').value;
+                const ethPortsIPTV = document.getElementById('ethPortsIPTV').value;
+
+                comandoBridgeIPTV = `bridge add 1-${equipo}-${placa}-${puerto}/gpononu gem ${gemIPTV} gtp 900 vlan ${vlanIPTV} tagged downlink video 0/50 epktrule 900 ipktrule 9999 cos 7 rg-bridged eth [${ethPortsIPTV}]`;
+
+                // Mostrar los comandos de IPTV
+                mostrarIPTV = true;
+            }
+
+            // Comandos para Telefonía
+            if (document.getElementById('telefono').checked) {
+                const gemTelefonia = 700 + puerto;
+                const dialNumber = document.getElementById('dialNumber').value;
+
+                comandoBridgeTelefonia = `bridge add 1-${equipo}-${placa}-${puerto}/gpononu gem ${gemTelefonia} gtp 2 tls vlan 1412 tagged sip rg-bridged`;
+                comandoTelefonia = `cpe voip add ${equipo}/${placa}/${puerto}/1 dial-number ${dialNumber} username ${dialNumber} password ${dialNumber} rx-gain -9 tx-gain -3 voip-server-profile 3 voip-media-profile 1 admin-state up`;
+
+                // Mostrar los comandos de Telefonía
+                mostrarTelefonia = true;
+            }
+
+            // Asignar los valores de comandos a las áreas de texto y mostrar las secciones según selección
+            if (mostrarInternet) {
+                document.getElementById('comandoSeteoONT').value = comandoSeteoONT;
+                document.getElementById('comandoBridgeONT').value = comandoBridgeONT;
+                document.getElementById('comandoPPPoE').value = comandoPPPoE;
+                document.getElementById('comandoWiFi24G').value = comandoWiFi24G;
+                document.getElementById('comandoWiFi5G').value = comandoWiFi5G;
+                document.getElementById('comandoBridgeMGMT').value = comandoBridgeMGMT;
+                document.getElementById('comandosInternet').style.display = 'block';
+            } else {
+                document.getElementById('comandosInternet').style.display = 'none';
+            }
+
+            if (mostrarTelefonia) {
+                document.getElementById('comandoBridgeTelefonia').value = comandoBridgeTelefonia;
+                document.getElementById('comandoTelefonia').value = comandoTelefonia;
+                document.getElementById('comandosTelefonia').style.display = 'block';
+            } else {
+                document.getElementById('comandosTelefonia').style.display = 'none';
+            }
+
+            if (mostrarIPTV) {
+                document.getElementById('comandoBridgeIPTV').value = comandoBridgeIPTV;
+                document.getElementById('comandosIPTV').style.display = 'block';
+            } else {
+                document.getElementById('comandosIPTV').style.display = 'none';
+            }
+        }
+
+        function copiarTexto(id) {
+            const texto = document.getElementById(id);
+            texto.select();
+            texto.setSelectionRange(0, 99999); // Para dispositivos móviles
+            document.execCommand("copy");
+            alert("Comando copiado");
+        }
+    </script>
+</head>
+<body>
+    <div class="body"></div>
+    <div class="grad"></div>
+    <div class="header">
+        <div>Alta de <span>ONT</span></div>
+        <button id="themeToggle" class="theme-btn">Cambiar Tema</button>
+    </div>
+    
+    
+    <div class="container">
+        <h3>Selecciona los servicios a dar de alta</h3>
+        <label><input type="checkbox" id="internet" onclick="toggleServiceFields()"> Internet</label>
+        <label><input type="checkbox" id="iptv" onclick="toggleServiceFields()"> IPTV</label>
+        <label><input type="checkbox" id="telefono" onclick="toggleServiceFields()"> Telefonía</label>
+
+        <form id="altaONTForm">
+            <!-- Selección de OLT -->
+            <label for="olt">Selecciona OLT:</label>
+            <select id="olt" name="olt" onchange="updateVlan()" required>
+                <option value="">Seleccionar</option>
+                <option value="MXK1">MXK1</option>
+                <option value="MXK2">MXK2</option>
+                <option value="MXK3">MXK3</option>
+            </select>
+
+            <!-- Campos Comunes -->
+            <label for="equipo">Equipo:</label>
+            <input type="text" id="equipo" name="equipo" required>
+
+            
+            <label for="placa">Placa:</label>
+            <input type="text" id="placa" name="placa" required onchange="updateVlan()">
+
+
+            <label for="puerto">Puerto GPON:</label>
+            <input type="number" id="puerto" name="puerto" required>
+
+            <!-- Campos para Internet -->
+            <div id="internetFields" style="display:none">
+                <h3>Internet (PPPoE)</h3>
+                <label for="fsan">Código de equipo (FSAN):</label>
+                <input type="text" id="fsan" name="fsan" required>
+                <label for="meprof">Modelo del módem (MEPROF):</label>
+                <input type="text" id="meprof" name="meprof" required>
+                <label for="vlanInternet">VLAN para Internet:</label>
+                <input type="text" id="vlanInternet" name="vlanInternet" required>
+                <label for="ethPortsInternet">Rango de Puertos Ethernet para Internet:</label>
+                <select id="ethPortsInternet" name="ethPortsInternet" required>
+                    <option value="1-1">1</option>
+                    <option value="1-2">1-2</option>
+                    <option value="1-3">1-3</option>
+                    <option value="1-4">1-4</option>
+                </select>
+                <label for="pppoeUser">Usuario PPPoE:</label>
+                <input type="text" id="pppoeUser" name="pppoeUser" required>
+                <label for="pppoePassword">Contraseña PPPoE:</label>
+                <input type="text" id="pppoePassword" name="pppoePassword" required>
+                <label for="ssid24">SSID WiFi 2.4G:</label>
+                <input type="text" id="ssid24" name="ssid24" required>
+                <label for="wifiPassword24">Contraseña WiFi 2.4G:</label>
+                <input type="text" id="wifiPassword24" name="wifiPassword24" required>
+                <label for="ssid5">SSID WiFi 5G:</label>
+                <input type="text" id="ssid5" name="ssid5" required>
+                <label for="wifiPassword5">Contraseña WiFi 5G:</label>
+                <input type="text" id="wifiPassword5" name="wifiPassword5" required>
+            </div>
+
+            <!-- Campos para IPTV -->
+            <div id="iptvFields" style="display:none">
+                <h3>IPTV</h3>
+                <label for="vlanIPTV">VLAN para IPTV:</label>
+                <input type="text" id="vlanIPTV" name="vlanIPTV" required>
+                <label for="ethPortsIPTV">Rango de Puertos Ethernet para IPTV:</label>
+                <select id="ethPortsIPTV" name="ethPortsIPTV" required>
+                    <option value="2-2">2</option>
+                    <option value="2-3">2-3</option>
+                    <option value="2-4">2-4</option>
+                </select>
+            </div>
+
+            <!-- Campos para Telefonía -->
+            <div id="telefonoFields" style="display:none">
+                <h3>Telefonía</h3>
+                <label for="dialNumber">Número de Teléfono:</label>
+                <input type="text" id="dialNumber" name="dialNumber" required>
+            </div>
+
+            <button type="button" onclick="generarComando()">Generar Comandos</button>
+        </form>
+
+        <h3>Comandos Generados:</h3>
+
+        <!-- Secciones de comandos generados para Internet -->
+        <div id="comandosInternet" style="display:none">
+            <div>
+                <label>Seteo de la ONT:</label>
+                <textarea id="comandoSeteoONT" rows="2" readonly></textarea>
+                <button onclick="copiarTexto('comandoSeteoONT')">Copiar</button>
+            </div>
+            <div>
+                <label>Creación del Bridge de la ONT:</label>
+                <textarea id="comandoBridgeONT" rows="2" readonly></textarea>
+                <button onclick="copiarTexto('comandoBridgeONT')">Copiar</button>
+            </div>
+            <div>
+                <label>Modificación del Usuario PPPoE:</label>
+                <textarea id="comandoPPPoE" rows="2" readonly></textarea>
+                <button onclick="copiarTexto('comandoPPPoE')">Copiar</button>
+            </div>
+            <div>
+                <label>Creación del WiFi 2.4G:</label>
+                <textarea id="comandoWiFi24G" rows="2" readonly></textarea>
+                <button onclick="copiarTexto('comandoWiFi24G')">Copiar</button>
+            </div>
+            <div>
+                <label>Creación del WiFi 5G:</label>
+                <textarea id="comandoWiFi5G" rows="2" readonly></textarea>
+                <button onclick="copiarTexto('comandoWiFi5G')">Copiar</button>
+            </div>
+            <div>
+                <label>Creación del Bridge de MGMT:</label>
+                <textarea id="comandoBridgeMGMT" rows="2" readonly></textarea>
+                <button onclick="copiarTexto('comandoBridgeMGMT')">Copiar</button>
+            </div>
+        </div>
+
+        <!-- Secciones de comandos generados para Telefonía -->
+        <div id="comandosTelefonia" style="display:none">
+            <div>
+                <label>Creación del Bridge de Telefonía:</label>
+                <textarea id="comandoBridgeTelefonia" rows="2" readonly></textarea>
+                <button onclick="copiarTexto('comandoBridgeTelefonia')">Copiar</button>
+            </div>
+            <div>
+                <label>Configuración de Telefonía:</label>
+                <textarea id="comandoTelefonia" rows="2" readonly></textarea>
+                <button onclick="copiarTexto('comandoTelefonia')">Copiar</button>
+            </div>
+        </div>
+
+        <!-- Secciones de comandos generados para IPTV -->
+        <div id="comandosIPTV" style="display:none">
+            <div>
+                <label>Creación del Bridge de IPTV:</label>
+                <textarea id="comandoBridgeIPTV" rows="2" readonly></textarea>
+                <button onclick="copiarTexto('comandoBridgeIPTV')">Copiar</button>
+            </div>
+        </div>
+
+        <button onclick="location.href='menu.html'">Volver al Menú Principal</button>
+    </div>
+</body>
+</html>
