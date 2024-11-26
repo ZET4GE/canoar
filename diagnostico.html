@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico de ONT</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Exo:100,200,400&display=swap" rel="stylesheet">
+    <script>
+        const vlansInternet = {
+            MXK1: [2101, 2102, 2103, 2104, 2105, 2106, 2107, 2108, 2109, 2110, 2111, 2112, 2113, 2114],
+            MXK2: [2201, 2202, 2203, 2204, 2205, 2206, 2207, 2208, 2209, 2210, 2211, 2212, 2213, 2214],
+            MXK3: [2301, 2302, 2303, 2304, 2305, 2306, 2307, 2308, 2309, 2310, 2311, 2312, 2313, 2314]
+        };
+        const vlansTelefonia = {
+            MXK1: [1012, 1022, 1032, 1042, 1052, 1062, 1072, 1082, 1092, 1102, 1112, 1122, 1132, 1142],
+            MXK2: [1212, 1222, 1232, 1242, 1252, 1262, 1272, 1282, 1292, 1202, 1212, 1222, 1232, 1242],
+            MXK3: [1312, 1322, 1332, 1342, 1352, 1362, 1372, 1382, 1392, 1302, 1312, 1322, 1332, 1342]
+        };
+        const vlansIPTV = {
+            MXK1: [1011, 1011, 1011, 1011, 1011, 1011, 1011, 1081, 1081, 1081, 1081, 1081, 1081, 1081],
+            MXK2: [1211, 1211, 1211, 1211, 1211, 1211, 1211, 1281, 1281, 1281, 1281, 1281, 1281, 1281],
+            MXK3: [1411, 1411, 1411, 1411, 1411, 1411, 1411, 1481, 1481, 1481, 1481, 1481, 1481, 1481]
+        };
+
+        function updateVlan() {
+            const olt = document.getElementById('olt').value;
+            const placa = parseInt(document.getElementById('placa').value) - 1;
+
+            if (olt && placa >= 0 && placa < 14) {
+                if (document.getElementById('internet').checked) {
+                    document.getElementById('vlanInternet').value = vlansInternet[olt][placa];
+                }
+                if (document.getElementById('telefono').checked) {
+                    document.getElementById('vlanTelefonia').value = vlansTelefonia[olt][placa];
+                }
+                if (document.getElementById('iptv').checked) {
+                    document.getElementById('vlanIPTV').value = vlansIPTV[olt][placa];
+                }
+            }
+        }
+
+        function toggleServiceFields() {
+            document.getElementById('internetFields').style.display = document.getElementById('internet').checked ? 'block' : 'none';
+            document.getElementById('iptvFields').style.display = document.getElementById('iptv').checked ? 'block' : 'none';
+            document.getElementById('telefonoFields').style.display = document.getElementById('telefono').checked ? 'block' : 'none';
+        }
+
+        function generarComandosDiagnostico() {
+            const equipo = document.getElementById('equipo').value;
+            const placa = document.getElementById('placa').value;
+            const puerto = document.getElementById('puerto').value;
+
+            const comandos = {};
+
+            // Comandos Generales
+            comandos["Comandos Generales"] = [
+                `onu status ${equipo}/${placa}/${puerto}`,
+                `cpe show ${equipo}/${placa}/${puerto}`,
+                `onu showall ${equipo}/${placa}/${puerto}`,
+                `onu reboot ${equipo}/${placa}/${puerto}`,
+                `onu set2default ${equipo}/${placa}/${puerto}`,
+                `onu recover ${equipo}/${placa}/${puerto}`,
+                `bridge show 1-${equipo}-${placa}-${puerto}/gpononu -linecard`
+            ];
+
+            // Comandos de Internet
+            if (document.getElementById('internet').checked) {
+                const vlanInternet = document.getElementById('vlanInternet').value;
+                const gemInternet = 600 + parseInt(puerto);
+
+                comandos["Comandos de Internet"] = [
+                    `bridge delete 1-${equipo}-${placa}-${gemInternet}-gponport-${gemInternet}/bridge all`,
+                    `bridge add 1-${equipo}-${placa}-${puerto}/gpononu gem ${gemInternet} downlink vlan ${vlanInternet} tagged rg-bpppoe eth [1-4] wlan 1 wlan 5`
+                ];
+            }
+
+            // Comandos de IPTV
+            if (document.getElementById('iptv').checked) {
+                const vlanIPTV = document.getElementById('vlanIPTV').value;
+                const gemIPTV = 900 + parseInt(puerto);
+
+                comandos["Comandos de IPTV"] = [
+                    `bridge delete 1-${equipo}-${placa}-${gemIPTV}-gponport-900/bridge all`,
+                    `bridge add 1-${equipo}-${placa}-${puerto}/gpononu gem ${gemIPTV} gtp 900 vlan ${vlanIPTV} tagged downlink video 0/50 epktrule 900 ipktrule 9999 cos 7 rg-bridged eth [2-4]`
+                ];
+            }
+
+            // Comandos de Telefonía
+            if (document.getElementById('telefono').checked) {
+                const vlanTelefonia = document.getElementById('vlanTelefonia').value;
+                const gemTelefonia = 700 + parseInt(puerto);
+                const dialNumber = document.getElementById('dialNumber').value;
+
+                comandos["Comandos de Telefonía"] = [
+                    `bridge delete 1-${equipo}-${placa}-${gemTelefonia}-gponport-900/bridge all`,
+                    `bridge add 1-${equipo}-${placa}/${puerto}/gpononu gem ${gemTelefonia} gtp 2 tls vlan ${vlanTelefonia} tagged sip rg-bridged`,
+                    `cpe voip add ${equipo}/${placa}/${puerto}/1 dial-number ${dialNumber} username ${dialNumber} password ${dialNumber} rx-gain -9 tx-gain -3 voip-server-profile 3 voip-media-profile 1 admin-state up`
+                ];
+            }
+
+            mostrarComandos(comandos);
+        }
+
+        function mostrarComandos(comandos) {
+            const output = document.getElementById('comandosGenerados');
+            output.innerHTML = "";
+
+            for (const [titulo, listaComandos] of Object.entries(comandos)) {
+                const section = document.createElement('div');
+                section.innerHTML = `<h4>${titulo}</h4>`;
+
+                listaComandos.forEach((comando, index) => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <textarea id="${titulo.replace(/\s+/g, '')}${index}" rows="2" readonly>${comando}</textarea>
+                        <button onclick="copiarTexto('${titulo.replace(/\s+/g, '')}${index}')">Copiar</button>
+                    `;
+                    section.appendChild(div);
+                });
+
+                output.appendChild(section);
+            }
+        }
+
+        function copiarTexto(id) {
+            const texto = document.getElementById(id);
+            texto.select();
+            texto.setSelectionRange(0, 99999); // Para móviles
+            document.execCommand("copy");
+            alert("Comando copiado");
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h3>Diagnóstico de ONT</h3>
+        <form id="diagnosticoONTForm">
+            <label for="olt">Selecciona la OLT:</label>
+            <select id="olt" name="olt" onchange="updateVlan()" required>
+                <option value="">Seleccione</option>
+                <option value="MXK1">MXK1</option>
+                <option value="MXK2">MXK2</option>
+                <option value="MXK3">MXK3</option>
+            </select>
+
+            <label for="equipo">Equipo:</label>
+            <input type="text" id="equipo" name="equipo" required>
+
+            <label for="placa">Placa:</label>
+            <input type="text" id="placa" name="placa" oninput="updateVlan()" required>
+
+            <label for="puerto">Puerto GPON:</label>
+            <input type="number" id="puerto" name="puerto" required>
+
+            <label><input type="checkbox" id="internet" onclick="toggleServiceFields()"> Internet</label>
+            <label><input type="checkbox" id="iptv" onclick="toggleServiceFields()"> IPTV</label>
+            <label><input type="checkbox" id="telefono" onclick="toggleServiceFields()"> Telefonía</label>
+
+            <div id="internetFields" style="display:none">
+                <label for="vlanInternet">VLAN para Internet:</label>
+                <input type="text" id="vlanInternet" name="vlanInternet" readonly>
+            </div>
+
+            <div id="iptvFields" style="display:none">
+                <label for="vlanIPTV">VLAN para IPTV:</label>
+                <input type="text" id="vlanIPTV" readonly>
+            </div>
+
+            <div id="telefonoFields" style="display:none">
+                <label for="vlanTelefonia">VLAN para Telefonía:</label>
+                <input type="text" id="vlanTelefonia" readonly>
+                <label for="dialNumber">Número de Teléfono:</label>
+                <input type="text" id="dialNumber">
+            </div>
+
+            <button type="button" onclick="generarComandosDiagnostico()">Generar Comandos</button>
+        </form>
+
+        <div id="comandosGenerados"></div>
+    </div>
+</body>
+</html>
