@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>canoar.com.ar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      background: #000;
+      background-image: url('https://cdn.pixabay.com/photo/2020/03/04/09/38/cyberpunk-4898452_1280.jpg');
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+      font-family: 'Orbitron', sans-serif;
+      position: relative;
+    }
+
+    .glitch {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 255, 247, 0.03),
+        rgba(0, 255, 247, 0.03) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      animation: flicker 1.5s infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .title {
+      position: absolute;
+      font-size: 2rem;
+      color: #00fff7;
+      text-shadow: 0 0 5px #00fff7, 0 0 10px #00fff7, 0 0 20px #00fff7;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      border: 1px solid #00fff7;
+      pointer-events: none;
+      transition: transform 0.2s ease;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 0.2; }
+      5% { opacity: 0.4; }
+      10% { opacity: 0.1; }
+      20% { opacity: 0.3; }
+      30% { opacity: 0.6; }
+      100% { opacity: 0.2; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glitch"></div>
+
+  <!-- Títulos múltiples flotantes con movimiento propio y efecto mouse -->
+  <script>
+    const TOTAL = 80;
+    const titles = [];
+
+    for (let i = 0; i < TOTAL; i++) {
+      const title = document.createElement('div');
+      title.className = 'title';
+      title.textContent = 'Te quiero abril❤️';
+      title.style.top = Math.random() * 100 + 'vh';
+      title.style.left = Math.random() * 100 + 'vw';
+      document.body.appendChild(title);
+      titles.push({ el: title, dx: (Math.random() - 0.5) * 0.5, dy: (Math.random() - 0.5) * 0.5 });
+    }
+
+    // Movimiento autónomo
+    function animateTitles() {
+      titles.forEach(t => {
+        const rect = t.el.getBoundingClientRect();
+        let top = parseFloat(t.el.style.top);
+        let left = parseFloat(t.el.style.left);
+        top += t.dy;
+        left += t.dx;
+
+        if (top < 0 || top > 100) t.dy *= -1;
+        if (left < 0 || left > 100) t.dx *= -1;
+
+        t.el.style.top = top + 'vh';
+        t.el.style.left = left + 'vw';
+      });
+      requestAnimationFrame(animateTitles);
+    }
+    animateTitles();
+
+    // Movimiento en base al mouse
+    document.addEventListener('mousemove', e => {
+      const x = e.clientX / window.innerWidth - 0.5;
+      const y = e.clientY / window.innerHeight - 0.5;
+      titles.forEach((t, i) => {
+        const offsetX = x * 10;
+        const offsetY = y * 10;
+        t.el.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+      });
+    });
+  </script>
+</body>
+</html>
