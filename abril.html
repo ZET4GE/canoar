@@ -2,21 +2,54 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Noche Ideal</title>
+  <title>La noche de nuestras vidas</title>
   <style>
     body {
       margin: 0;
       overflow: hidden;
-      background: radial-gradient(ellipse at center, #0f0c29, #302b63, #24243e);
-      color: #00ffe1;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
       font-family: 'Orbitron', sans-serif;
+      color: #00ffe1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #00ffe1;
+    }
+
+    input {
+      padding: 10px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      background: #1c1c3c;
+      color: #00ffe1;
+      box-shadow: 0 0 10px #00ffe1;
+    }
+
+    #verificar {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background: #ff007f;
+      border: none;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 15px #ff007f;
     }
 
     .mensaje {
       position: absolute;
       font-size: 24px;
-      animation: flotar 10s linear infinite;
       pointer-events: none;
+      animation: flotar 8s linear infinite;
     }
 
     @keyframes flotar {
@@ -33,54 +66,51 @@
       }
     }
 
-    #boton {
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #ff007f;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
-      font-size: 18px;
-      cursor: pointer;
-      box-shadow: 0 0 15px #ff007f;
+    #resultado {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #ff3c9f;
+      text-shadow: 0 0 10px #ff007f;
     }
   </style>
 </head>
 <body>
 
-<button id="boton">¿HAMBURGUESA + COGIDA?</button>
+  <h1>¿Noche mágica o mal plan?</h1>
 
-<script>
-  let hamburguesa = true;
-  let cogida = true;
+  <input type="text" id="palabra1" placeholder="Primera palabra...">
+  <input type="text" id="palabra2" placeholder="Segunda palabra...">
+  <button id="verificar">Comprobar</button>
 
-  document.getElementById("boton").addEventListener("click", () => {
-    if (hamburguesa && cogida) {
-      for (let i = 0; i < 20; i++) {
-        let msg = document.createElement("div");
-        msg.className = "mensaje";
-        msg.textContent = "La noche de tu vida";
-        msg.style.left = Math.random() * window.innerWidth + "px";
-        msg.style.top = Math.random() * window.innerHeight + "px";
-        msg.style.animationDuration = (5 + Math.random() * 10) + "s";
-        document.body.appendChild(msg);
+  <div id="resultado"></div>
 
-        // Desaparecer después de un rato
-        setTimeout(() => {
-          msg.remove();
-        }, 15000);
+  <script>
+    const verificarBtn = document.getElementById("verificar");
+    const resultado = document.getElementById("resultado");
+
+    verificarBtn.addEventListener("click", () => {
+      const p1 = document.getElementById("palabra1").value.trim().toLowerCase();
+      const p2 = document.getElementById("palabra2").value.trim().toLowerCase();
+
+      if (p1 === "hamburguesa" && p2 === "cogida") {
+        resultado.textContent = "";
+        for (let i = 0; i < 30; i++) {
+          const msg = document.createElement("div");
+          msg.className = "mensaje";
+          msg.textContent = Math.random() > 0.5 ? "La noche de nuestras vidas" : "Te quiero";
+          msg.style.left = Math.random() * window.innerWidth + "px";
+          msg.style.top = Math.random() * window.innerHeight + "px";
+          msg.style.animationDuration = (5 + Math.random() * 10) + "s";
+          document.body.appendChild(msg);
+
+          setTimeout(() => msg.remove(), 15000);
+        }
+      } else {
+        resultado.textContent = "¡Mal plan!";
       }
-    } else {
-      alert("Te falta algo pa que sea la noche ideal...");
-    }
-  });
-</script>
+    });
+  </script>
 
 </body>
 </html>
 
-</body>
-</html>
