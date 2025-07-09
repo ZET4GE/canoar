@@ -2,115 +2,95 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>La noche de nuestras vidas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Viaje a Salta</title>
   <style>
     body {
+      background-color: #faf3f0;
+      color: #333;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem;
       margin: 0;
-      overflow: hidden;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      font-family: 'Orbitron', sans-serif;
-      color: #00ffe1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
     }
 
     h1 {
-      margin-bottom: 20px;
-      text-shadow: 0 0 10px #00ffe1;
+      text-align: center;
+      font-size: 2.5rem;
+      color: #bb6b6b;
     }
 
-    input {
-      padding: 10px;
-      margin: 5px;
-      border: none;
-      border-radius: 8px;
-      font-size: 18px;
-      background: #1c1c3c;
-      color: #00ffe1;
-      box-shadow: 0 0 10px #00ffe1;
+    .nota {
+      text-align: center;
+      font-style: italic;
+      margin-bottom: 2rem;
+      color: #888;
     }
 
-    #verificar {
-      margin-top: 15px;
-      padding: 10px 20px;
-      font-size: 18px;
-      background: #ff007f;
-      border: none;
-      color: white;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+      font-size: 1rem;
+      background-color: #fff;
       border-radius: 10px;
-      cursor: pointer;
-      box-shadow: 0 0 15px #ff007f;
+      overflow: hidden;
     }
 
-    .mensaje {
-      position: absolute;
-      font-size: 24px;
-      pointer-events: none;
-      animation: flotar 8s linear infinite;
+    th {
+      background-color: #ffe5ec;
+      color: #5c5c5c;
+      padding: 12px;
     }
 
-    @keyframes flotar {
-      0% {
-        transform: translateY(100vh) rotate(0deg);
-        opacity: 0;
-      }
-      50% {
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-100vh) rotate(360deg);
-        opacity: 0;
-      }
+    td {
+      text-align: center;
+      padding: 10px;
+      border-bottom: 1px solid #f0e0e0;
     }
 
-    #resultado {
-      margin-top: 20px;
-      font-size: 20px;
-      color: #ff3c9f;
-      text-shadow: 0 0 10px #ff007f;
+    tfoot td {
+      font-weight: bold;
+      background-color: #fff0f3;
+    }
+
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>¿Noche mágica o mal plan?</h1>
+  <h1>Viaje a Salta</h1>
+  <div class="nota">Will y Abril 💕</div>
 
-  <input type="text" id="palabra1" placeholder="Primera palabra...">
-  <input type="text" id="palabra2" placeholder="Segunda palabra...">
-  <button id="verificar">Comprobar</button>
-
-  <div id="resultado"></div>
-
-  <script>
-    const verificarBtn = document.getElementById("verificar");
-    const resultado = document.getElementById("resultado");
-
-    verificarBtn.addEventListener("click", () => {
-      const p1 = document.getElementById("palabra1").value.trim().toLowerCase();
-      const p2 = document.getElementById("palabra2").value.trim().toLowerCase();
-
-      if (p1 === "hamburguesa" && p2 === "cogida") {
-        resultado.textContent = "";
-        for (let i = 0; i < 30; i++) {
-          const msg = document.createElement("div");
-          msg.className = "mensaje";
-          msg.textContent = Math.random() > 0.5 ? "La noche de nuestras vidas" : "Te quiero";
-          msg.style.left = Math.random() * window.innerWidth + "px";
-          msg.style.top = Math.random() * window.innerHeight + "px";
-          msg.style.animationDuration = (5 + Math.random() * 10) + "s";
-          document.body.appendChild(msg);
-
-          setTimeout(() => msg.remove(), 15000);
-        }
-      } else {
-        resultado.textContent = "¡Mal plan!";
-      }
-    });
-  </script>
+  <table>
+    <thead>
+      <tr>
+        <th>Lugar</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Cosas para hacer</th>
+        <th>Código de vuelo</th>
+        <th>Gasto</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Salta</td><td>21/07</td><td>5:00</td><td>Salida de morteros-Cba</td><td></td><td>$71,600.00</td></tr>
+      <tr><td></td><td>21/07</td><td>17:00</td><td>Salida del avión CBA-SLA</td><td>HYXCBU</td><td>$267,481.00</td></tr>
+      <tr><td></td><td>21/07</td><td>15:00</td><td>Check-in en salta del Airbnb</td><td></td><td>$220,000.00</td></tr>
+      <tr><td></td><td>29/07</td><td>13:00</td><td>Check-out</td><td></td><td>$0.00</td></tr>
+      <tr><td></td><td>29/07</td><td>14:50</td><td>Salida SLA-CBA</td><td>ZZKMSP</td><td>$137,000.00</td></tr>
+      <tr><td></td><td>29/07</td><td>18:15</td><td>Salida Córdoba-Morteros</td><td></td><td>$71,600.00</td></tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5">Total de gastos</td>
+        <td>$767,681.00</td>
+      </tr>
+    </tfoot>
+  </table>
 
 </body>
 </html>
-
