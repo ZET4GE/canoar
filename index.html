@@ -56,10 +56,10 @@
       border-radius: 10px;
     }
 
-    .mapa, .documentos, .checklist, table {
+    .mapa, .documentos, .checklist, table, .gastos-remotos {
       background-color: #fff;
       border-radius: 10px;
-      padding: 1rem;
+      padding: 1rem 2rem;
       margin-top: 2rem;
       box-shadow: 0 0 10px var(--sombra);
     }
@@ -67,13 +67,16 @@
     body.dark .mapa,
     body.dark .documentos,
     body.dark .checklist,
+    body.dark .gastos-remotos,
     body.dark table {
       background-color: #2a2a2a;
     }
 
     .documentos h2,
-    .checklist h2 {
+    .checklist h2,
+    .gastos-remotos h2 {
       color: var(--principal);
+      margin-bottom: 1rem;
     }
 
     .documentos ul,
@@ -138,6 +141,24 @@
       box-shadow: 0 0 10px var(--sombra);
       transition: 0.3s;
       z-index: 999;
+    }
+
+    .gastos-remotos input {
+      margin: 0.3rem;
+      padding: 0.4rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .gastos-remotos button {
+      padding: 0.4rem 1rem;
+      border: none;
+      background-color: var(--principal);
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
     }
 
     @media (max-width: 600px) {
@@ -211,21 +232,21 @@
       </tr>
     </tfoot>
   </table>
-<div class="gastos-remotos">
-  <h2>🌐 Registrar gasto compartido</h2>
-  <form id="form-google">
-    <input type="text" id="descripcion" placeholder="Descripción" required>
-    <input type="number" id="monto" placeholder="Monto (ARS)" required>
-    <button type="submit">Guardar gasto</button>
-  </form>
-  <p id="msg"></p>
-</div>
+
+  <div class="gastos-remotos">
+    <h2>🌐 Registrar gasto compartido</h2>
+    <form id="form-google">
+      <input type="text" id="descripcion" placeholder="Descripción" required>
+      <input type="number" id="monto" placeholder="Monto (ARS)" required>
+      <button type="submit">Guardar gasto</button>
+    </form>
+    <p id="msg"></p>
+  </div>
 
   <script>
     // Cuenta regresiva
     const countdown = document.getElementById("countdown");
     const targetDate = new Date("2025-07-21T00:00:00").getTime();
-
     function updateCountdown() {
       const now = new Date().getTime();
       const distance = targetDate - now;
@@ -245,16 +266,12 @@
     // Botón modo oscuro
     const btn = document.getElementById("modo-btn");
     const body = document.body;
-
-    function toggleModo() {
+    btn.addEventListener("click", () => {
       body.classList.toggle("dark");
       const modo = body.classList.contains("dark") ? "dark" : "light";
       localStorage.setItem("modo", modo);
       btn.innerText = modo === "dark" ? "☀️ Modo claro" : "🌙 Modo oscuro";
-    }
-
-    btn.addEventListener("click", toggleModo);
-
+    });
     window.onload = () => {
       const savedModo = localStorage.getItem("modo");
       if (savedModo === "dark") {
@@ -262,7 +279,39 @@
         btn.innerText = "☀️ Modo claro";
       }
     };
+
+    // Enviar gasto a Google Sheets
+    document.getElementById("form-google").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const desc = document.getElementById("descripcion").value.trim();
+      const monto = parseFloat(document.getElementById("monto").value);
+      const msg = document.getElementById("msg");
+
+      if (!desc || isNaN(monto)) {
+        msg.innerText = "Campos inválidos.";
+        return;
+      }
+
+      msg.innerText = "Enviando...";
+
+      try {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbwdElB4lMvjiqQEtlrzlmFjChERSp9hAhA9EaXeS--xP4CpK0NcnYLUxkVCh7c3Fo1EJw/exec", {
+          method: "POST",
+          body: JSON.stringify({ descripcion: desc, monto: monto }),
+          headers: { "Content-Type": "application/json" }
+        });
+
+        if (res.ok) {
+          msg.innerText = "✅ Gasto registrado correctamente.";
+          this.reset();
+        } else {
+          msg.innerText = "❌ Error al enviar. Intentá más tarde.";
+        }
+      } catch (err) {
+        msg.innerText = "❌ Error de conexión.";
+        console.error(err);
+      }
+    });
   </script>
 </body>
 </html>
-
