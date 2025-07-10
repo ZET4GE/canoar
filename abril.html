@@ -56,52 +56,55 @@
       border-radius: 10px;
     }
 
-    .mapa {
-      margin: 2rem 0;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 0 10px var(--sombra);
-    }
-
-    .checklist {
+    .mapa, .documentos, .checklist, table {
       background-color: #fff;
       border-radius: 10px;
-      padding: 1rem 2rem;
+      padding: 1rem;
       margin-top: 2rem;
       box-shadow: 0 0 10px var(--sombra);
     }
 
-    body.dark .checklist {
+    body.dark .mapa,
+    body.dark .documentos,
+    body.dark .checklist,
+    body.dark table {
       background-color: #2a2a2a;
     }
 
+    .documentos h2,
     .checklist h2 {
       color: var(--principal);
-      margin-bottom: 1rem;
     }
 
+    .documentos ul,
     .checklist ul {
       list-style: none;
       padding: 0;
     }
 
+    .documentos li,
     .checklist li {
       margin-bottom: 0.5rem;
       font-size: 1rem;
     }
 
+    .documentos a {
+      color: var(--principal);
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    iframe {
+      width: 100%;
+      height: 300px;
+      border: 0;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 2rem;
       font-size: 1rem;
-      background-color: #fff;
-      border-radius: 10px;
       overflow: hidden;
-    }
-
-    body.dark table {
-      background-color: #2a2a2a;
     }
 
     th {
@@ -121,13 +124,6 @@
       background-color: var(--suave);
     }
 
-    @media (max-width: 600px) {
-      table, thead, tbody, th, td, tr {
-        font-size: 0.9rem;
-      }
-    }
-
-    /* Botón de modo */
     #modo-btn {
       position: fixed;
       top: 10px;
@@ -143,6 +139,12 @@
       transition: 0.3s;
       z-index: 999;
     }
+
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -154,10 +156,15 @@
   <div class="countdown" id="countdown">Cargando cuenta regresiva...</div>
 
   <div class="mapa">
-    <iframe
-      src="https://www.google.com/maps?q=Deán+Funes+1380,+Salta,+Argentina&output=embed"
-      width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
-    </iframe>
+    <iframe src="https://www.google.com/maps?q=Deán+Funes+1380,+Salta,+Argentina&output=embed" allowfullscreen="" loading="lazy"></iframe>
+  </div>
+
+  <div class="documentos">
+    <h2>📎 Documentos del viaje</h2>
+    <ul>
+      <li><a href="STC - Imprimir boleto electrónico-abril.pdf" target="_blank">🧍 Pasaje de Abril (PDF)</a></li>
+      <li><a href="STC - Imprimir boleto electrónico-willi.pdf" target="_blank">🧔 Pasaje de Willi (PDF)</a></li>
+    </ul>
   </div>
 
   <div class="checklist">
@@ -213,24 +220,20 @@
     function updateCountdown() {
       const now = new Date().getTime();
       const distance = targetDate - now;
-
       if (distance < 0) {
         countdown.innerHTML = "¡Ya comenzó el viaje! ✈️";
         return;
       }
-
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
       countdown.innerHTML = `⏳ Faltan <strong>${days}</strong> días, <strong>${hours}</strong> horas, <strong>${minutes}</strong> minutos y <strong>${seconds}</strong> segundos para el viaje ✈️`;
     }
-
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // Modo oscuro
+    // Botón modo oscuro
     const btn = document.getElementById("modo-btn");
     const body = document.body;
 
@@ -243,7 +246,6 @@
 
     btn.addEventListener("click", toggleModo);
 
-    // Leer preferencia guardada
     window.onload = () => {
       const savedModo = localStorage.getItem("modo");
       if (savedModo === "dark") {
