@@ -313,5 +313,81 @@
       }
     });
   </script>
+  <!-- 👇 Insertar esto justo antes del cierre </body> de tu index.html -->
+
+<div class="gastos-web">
+  <h2>📊 Gastos cargados</h2>
+  <table id="tabla-gastos">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Descripción</th>
+        <th>Monto</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="3">Cargando gastos...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
+<script>
+  function cargarGastos() {
+    Tabletop.init({
+      key: '1uWKpiLSzBQcm9HZhdUTWwTrZ-1AGWM-NojE9dk9frjk',
+      callback: function (data) {
+        const tbody = document.querySelector("#tabla-gastos tbody");
+        tbody.innerHTML = "";
+        data.reverse().forEach(row => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${row.Fecha}</td><td>${row.Descripción}</td><td>$${parseFloat(row.Monto).toLocaleString()}</td>`;
+          tbody.appendChild(tr);
+        });
+      },
+      simpleSheet: true
+    });
+  }
+
+  window.addEventListener("DOMContentLoaded", cargarGastos);
+</script>
+
+<style>
+  .gastos-web {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 1rem 2rem;
+    margin-top: 2rem;
+    box-shadow: 0 0 10px var(--sombra);
+    overflow-x: auto;
+  }
+
+  body.dark .gastos-web {
+    background-color: #2a2a2a;
+  }
+
+  .gastos-web h2 {
+    color: var(--principal);
+    margin-bottom: 1rem;
+  }
+
+  #tabla-gastos {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  #tabla-gastos th,
+  #tabla-gastos td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+  }
+
+  body.dark #tabla-gastos th,
+  body.dark #tabla-gastos td {
+    border-color: #444;
+  }
+</style>
+
 </body>
 </html>
