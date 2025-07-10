@@ -210,3 +210,30 @@ tr:hover {
   font-size: 1rem;
 }
 
+.documentos {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 1rem 2rem;
+  margin-top: 2rem;
+  box-shadow: 0 0 10px var(--sombra);
+}
+
+body.dark .documentos {
+  background-color: #2a2a2a;
+}
+
+.documentos h2 {
+  color: var(--principal);
+  margin-bottom: 1rem;
+}
+
+.documentos a {
+  color: var(--principal);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.documentos li {
+  margin-bottom: 0.5rem;
+}
+
