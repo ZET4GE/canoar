@@ -5,18 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Viaje a Salta</title>
   <style>
+    :root {
+      --fondo: #faf3f0;
+      --texto: #333;
+      --principal: #bb6b6b;
+      --suave: #fff0f3;
+      --tabla-header: #ffe5ec;
+      --sombra: #f0dede;
+    }
+
+    body.dark {
+      --fondo: #1e1e1e;
+      --texto: #f5f5f5;
+      --principal: #ffb3b3;
+      --suave: #333;
+      --tabla-header: #444;
+      --sombra: #000;
+    }
+
     body {
-      background-color: #faf3f0;
-      color: #333;
+      background-color: var(--fondo);
+      color: var(--texto);
       font-family: 'Segoe UI', sans-serif;
       padding: 2rem;
       margin: 0;
+      transition: all 0.3s ease;
     }
 
     h1 {
       text-align: center;
       font-size: 2.5rem;
-      color: #bb6b6b;
+      color: var(--principal);
     }
 
     .nota {
@@ -30,9 +49,9 @@
       text-align: center;
       font-size: 1.5rem;
       font-weight: bold;
-      color: #5c5c5c;
+      color: var(--texto);
       margin-bottom: 2rem;
-      background-color: #fff0f3;
+      background-color: var(--suave);
       padding: 1rem;
       border-radius: 10px;
     }
@@ -41,7 +60,7 @@
       margin: 2rem 0;
       border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 0 10px #e6dada;
+      box-shadow: 0 0 10px var(--sombra);
     }
 
     .checklist {
@@ -49,11 +68,15 @@
       border-radius: 10px;
       padding: 1rem 2rem;
       margin-top: 2rem;
-      box-shadow: 0 0 10px #f0dede;
+      box-shadow: 0 0 10px var(--sombra);
+    }
+
+    body.dark .checklist {
+      background-color: #2a2a2a;
     }
 
     .checklist h2 {
-      color: #bb6b6b;
+      color: var(--principal);
       margin-bottom: 1rem;
     }
 
@@ -77,21 +100,25 @@
       overflow: hidden;
     }
 
+    body.dark table {
+      background-color: #2a2a2a;
+    }
+
     th {
-      background-color: #ffe5ec;
-      color: #5c5c5c;
+      background-color: var(--tabla-header);
+      color: var(--texto);
       padding: 12px;
     }
 
     td {
       text-align: center;
       padding: 10px;
-      border-bottom: 1px solid #f0e0e0;
+      border-bottom: 1px solid #ccc;
     }
 
     tfoot td {
       font-weight: bold;
-      background-color: #fff0f3;
+      background-color: var(--suave);
     }
 
     @media (max-width: 600px) {
@@ -99,9 +126,28 @@
         font-size: 0.9rem;
       }
     }
+
+    /* Botón de modo */
+    #modo-btn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 0.5rem 1rem;
+      background-color: var(--suave);
+      color: var(--texto);
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 0 10px var(--sombra);
+      transition: 0.3s;
+      z-index: 999;
+    }
   </style>
 </head>
 <body>
+  <button id="modo-btn">🌙 Modo oscuro</button>
+
   <h1>Viaje a Salta</h1>
   <div class="nota">Will y Abril 💕</div>
 
@@ -160,6 +206,7 @@
   </table>
 
   <script>
+    // Cuenta regresiva
     const countdown = document.getElementById("countdown");
     const targetDate = new Date("2025-07-21T00:00:00").getTime();
 
@@ -182,6 +229,28 @@
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
+
+    // Modo oscuro
+    const btn = document.getElementById("modo-btn");
+    const body = document.body;
+
+    function toggleModo() {
+      body.classList.toggle("dark");
+      const modo = body.classList.contains("dark") ? "dark" : "light";
+      localStorage.setItem("modo", modo);
+      btn.innerText = modo === "dark" ? "☀️ Modo claro" : "🌙 Modo oscuro";
+    }
+
+    btn.addEventListener("click", toggleModo);
+
+    // Leer preferencia guardada
+    window.onload = () => {
+      const savedModo = localStorage.getItem("modo");
+      if (savedModo === "dark") {
+        body.classList.add("dark");
+        btn.innerText = "☀️ Modo claro";
+      }
+    };
   </script>
 </body>
 </html>
