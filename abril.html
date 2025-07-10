@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Viaje a Salta</title>
   <style>
     body {
@@ -35,6 +35,36 @@
       background-color: #fff0f3;
       padding: 1rem;
       border-radius: 10px;
+    }
+
+    .mapa {
+      margin: 2rem 0;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px #e6dada;
+    }
+
+    .checklist {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 1rem 2rem;
+      margin-top: 2rem;
+      box-shadow: 0 0 10px #f0dede;
+    }
+
+    .checklist h2 {
+      color: #bb6b6b;
+      margin-bottom: 1rem;
+    }
+
+    .checklist ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .checklist li {
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
     }
 
     table {
@@ -72,11 +102,35 @@
   </style>
 </head>
 <body>
-
   <h1>Viaje a Salta</h1>
   <div class="nota">Will y Abril 💕</div>
 
   <div class="countdown" id="countdown">Cargando cuenta regresiva...</div>
+
+  <div class="mapa">
+    <iframe
+      src="https://www.google.com/maps?q=Deán+Funes+1380,+Salta,+Argentina&output=embed"
+      width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
+    </iframe>
+  </div>
+
+  <div class="checklist">
+    <h2>🧳 Checklist de viaje</h2>
+    <ul>
+      <li><input type="checkbox"> Documentos</li>
+      <li><input type="checkbox"> Ropa cómoda</li>
+      <li><input type="checkbox"> Celular cargado</li>
+      <li><input type="checkbox"> Cargador de celular</li>
+      <li><input type="checkbox"> Protector solar</li>
+      <li><input type="checkbox"> Anteojos de sol</li>
+      <li><input type="checkbox"> Mochila liviana</li>
+      <li><input type="checkbox"> Zapatillas cómodas</li>
+      <li><input type="checkbox"> Mate (somos argentinos 😎)</li>
+      <li><input type="checkbox"> Tarjetas / efectivo</li>
+      <li><input type="checkbox"> DNI / Pasajes impresos</li>
+      <li><input type="checkbox"> Auriculares</li>
+    </ul>
+  </div>
 
   <table>
     <thead>
@@ -129,6 +183,6 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
   </script>
-
 </body>
 </html>
+
