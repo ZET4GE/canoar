@@ -180,3 +180,33 @@ tr:hover {
     background-color: #3b3b3b;
 }
 
+.mapa {
+  margin: 2rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 10px #e6dada;
+}
+
+.checklist {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 1rem 2rem;
+  margin-top: 2rem;
+  box-shadow: 0 0 10px #f0dede;
+}
+
+.checklist h2 {
+  color: #bb6b6b;
+  margin-bottom: 1rem;
+}
+
+.checklist ul {
+  list-style: none;
+  padding: 0;
+}
+
+.checklist li {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
