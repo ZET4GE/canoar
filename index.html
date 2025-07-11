@@ -56,7 +56,7 @@
       border-radius: 10px;
     }
 
-    .mapa, .documentos, .checklist, table, .gastos-remotos {
+    .mapa, .documentos, .checklist, table, .gastos-remotos, .gastos-web {
       background-color: #fff;
       border-radius: 10px;
       padding: 1rem 2rem;
@@ -68,13 +68,15 @@
     body.dark .documentos,
     body.dark .checklist,
     body.dark .gastos-remotos,
+    body.dark .gastos-web,
     body.dark table {
       background-color: #2a2a2a;
     }
 
     .documentos h2,
     .checklist h2,
-    .gastos-remotos h2 {
+    .gastos-remotos h2,
+    .gastos-web h2 {
       color: var(--principal);
       margin-bottom: 1rem;
     }
@@ -160,24 +162,16 @@
       cursor: pointer;
       font-size: 1rem;
     }
-
-    @media (max-width: 600px) {
-      table, thead, tbody, th, td, tr {
-        font-size: 0.9rem;
-      }
-    }
   </style>
 </head>
 <body>
   <button id="modo-btn">🌙 Modo oscuro</button>
-
   <h1>Viaje a Salta</h1>
   <div class="nota">Will y Abril 💕</div>
-
   <div class="countdown" id="countdown">Cargando cuenta regresiva...</div>
 
   <div class="mapa">
-    <iframe src="https://www.google.com/maps?q=Deán+Funes+1380,+Salta,+Argentina&output=embed" allowfullscreen="" loading="lazy"></iframe>
+    <iframe src="https://www.google.com/maps?q=De%C3%A1n+Funes+1380,+Salta,+Argentina&output=embed"></iframe>
   </div>
 
   <div class="documentos">
@@ -199,13 +193,12 @@
       <li><input type="checkbox"> Anteojos de sol</li>
       <li><input type="checkbox"> Mochila liviana</li>
       <li><input type="checkbox"> Zapatillas cómodas</li>
-      <li><input type="checkbox"> Mate (somos argentinos 😎)</li>
+      <li><input type="checkbox"> Mate</li>
       <li><input type="checkbox"> Tarjetas / efectivo</li>
       <li><input type="checkbox"> DNI / Pasajes impresos</li>
       <li><input type="checkbox"> Auriculares</li>
     </ul>
   </div>
-
   <table>
     <thead>
       <tr>
@@ -232,38 +225,26 @@
       </tr>
     </tfoot>
   </table>
-
   <div class="gastos-remotos">
-  <h2>🌐 Registrar gasto compartido</h2>
-  <form id="form-sheetdb">
-    <input type="text" id="descripcion" placeholder="Descripción" required>
-    <input type="number" id="monto" placeholder="Monto (ARS)" required>
-    <button type="submit">Guardar gasto</button>
-  </form>
-  <p id="msg"></p>
-</div>
-<div class="gastos-web">
-  <h2>📊 Gastos compartidos registrados</h2>
-  <table id="tabla-gastos">
-    <thead>
-      <tr>
-        <th>Fecha</th>
-        <th>Descripción</th>
-        <th>Monto</th>
-      </tr>
-    </thead>
-    <tbody><tr><td colspan="3">Cargando gastos...</td></tr></tbody>
-    <tfoot>
-      <tr>
-        <td colspan="2"><strong>Total</strong></td>
-        <td id="total-gastos">$0</td>
-      </tr>
-    </tfoot>
-  </table>
-</div>
+    <h2>🌐 Registrar gasto compartido</h2>
+    <form id="form-sheetdb">
+      <input type="text" id="descripcion" placeholder="Descripción" required>
+      <input type="number" id="monto" placeholder="Monto (ARS)" required>
+      <button type="submit">Guardar gasto</button>
+    </form>
+    <p id="msg"></p>
+  </div>
+
+  <div class="gastos-web">
+    <h2>📊 Gastos compartidos registrados</h2>
+    <table id="tabla-gastos">
+      <thead><tr><th>Fecha</th><th>Descripción</th><th>Monto</th></tr></thead>
+      <tbody><tr><td colspan="3">Cargando gastos...</td></tr></tbody>
+      <tfoot><tr><td colspan="2">Total</td><td id="total-gastos">$0</td></tr></tfoot>
+    </table>
+  </div>
 
   <script>
-    // Cuenta regresiva
     const countdown = document.getElementById("countdown");
     const targetDate = new Date("2025-07-21T00:00:00").getTime();
     function updateCountdown() {
@@ -282,44 +263,43 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // Botón modo oscuro
-    const btn = document.getElementById("modo-btn");
-    const body = document.body;
-    btn.addEventListener("click", () => {
-      body.classList.toggle("dark");
-      const modo = body.classList.contains("dark") ? "dark" : "light";
+    document.getElementById("modo-btn").addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      const modo = document.body.classList.contains("dark") ? "dark" : "light";
       localStorage.setItem("modo", modo);
-      btn.innerText = modo === "dark" ? "☀️ Modo claro" : "🌙 Modo oscuro";
+      document.getElementById("modo-btn").innerText = modo === "dark" ? "☀️ Modo claro" : "🌙 Modo oscuro";
     });
+
     window.onload = () => {
       const savedModo = localStorage.getItem("modo");
       if (savedModo === "dark") {
-        body.classList.add("dark");
-        btn.innerText = "☀️ Modo claro";
+        document.body.classList.add("dark");
+        document.getElementById("modo-btn").innerText = "☀️ Modo claro";
       }
     };
 
-    // Enviar gasto a Google Sheets
     document.getElementById("form-sheetdb").addEventListener("submit", async function (e) {
       e.preventDefault();
       const desc = document.getElementById("descripcion").value.trim();
       const monto = parseFloat(document.getElementById("monto").value);
       const msg = document.getElementById("msg");
-
       if (!desc || isNaN(monto)) {
         msg.innerText = "Campos inválidos.";
         return;
       }
-
       msg.innerText = "Enviando...";
-
       try {
         const res = await fetch("https://sheetdb.io/api/v1/99g0uuofd4gbc", {
           method: "POST",
-          body: JSON.stringify({ descripcion: desc, monto: monto }),
-          headers: { "Content-Type": "application/json" }
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            data: [{
+              fecha: new Date().toISOString().split("T")[0],
+              descripcion: desc,
+              monto: monto
+            }]
+          })
         });
-
         if (res.ok) {
           msg.innerText = "✅ Gasto registrado correctamente.";
           this.reset();
@@ -332,47 +312,32 @@
         console.error(err);
       }
     });
-  </script>
-  <script>
-  document.getElementById("form-sheetdb").addEventListener("submit", async function (e) {
-    e.preventDefault();
-    const desc = document.getElementById("descripcion").value.trim();
-    const monto = parseFloat(document.getElementById("monto").value);
-    const msg = document.getElementById("msg");
 
-    if (!desc || isNaN(monto)) {
-      msg.innerText = "Campos inválidos.";
-      return;
-    }
-
-    msg.innerText = "Enviando...";
-
-    try {
-      const res = await fetch("https://sheetdb.io/api/v1/99g0uuofd4gbc", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          data: [{
-            fecha: new Date().toISOString().split("T")[0],
-            descripcion: desc,
-            monto: monto
-          }]
-        })
-      });
-
-      if (res.ok) {
-        msg.innerText = "✅ Gasto registrado correctamente.";
-        this.reset();
-        cargarGastosSheetDB();
-      } else {
-        msg.innerText = "❌ Error al enviar. Intentá más tarde.";
+    async function cargarGastosSheetDB() {
+      const url = "https://sheetdb.io/api/v1/99g0uuofd4gbc";
+      const tbody = document.querySelector("#tabla-gastos tbody");
+      const totalEl = document.getElementById("total-gastos");
+      tbody.innerHTML = "<tr><td colspan='3'>Cargando...</td></tr>";
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        if (!Array.isArray(data)) throw new Error("No se recibió un array");
+        let total = 0;
+        tbody.innerHTML = "";
+        data.reverse().forEach(g => {
+          const monto = parseFloat(g.monto) || 0;
+          total += monto;
+          const fila = `<tr><td>${g.fecha || "-"}</td><td>${g.descripcion}</td><td>$${monto.toLocaleString()}</td></tr>`;
+          tbody.innerHTML += fila;
+        });
+        totalEl.innerText = `$${total.toLocaleString()}`;
+      } catch (e) {
+        console.error("Error al cargar gastos:", e);
+        tbody.innerHTML = "<tr><td colspan='3'>Error al cargar gastos.</td></tr>";
       }
-    } catch (err) {
-      msg.innerText = "❌ Error de conexión.";
-      console.error(err);
     }
-  });
-</script>
-
+    window.addEventListener("DOMContentLoaded", cargarGastosSheetDB);
+  </script>
 </body>
 </html>
+
