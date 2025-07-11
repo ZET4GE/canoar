@@ -1,259 +1,119 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Viaje a Salta</title>
-  <style>
-    :root {
-      --principal: #6c5ce7;
-      --fondo: #fef6ff;
-      --texto: #333;
-      --sombra: rgba(0, 0, 0, 0.1);
-    }
-
-    body.dark {
-      --fondo: #1e1e1e;
-      --texto: #fff;
-      --sombra: rgba(255, 255, 255, 0.05);
-    }
-
-    body {
-      background: var(--fondo);
-      color: var(--texto);
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 2rem;
-      transition: background 0.3s, color 0.3s;
-    }
-
-    h1, h2 {
-      text-align: center;
-      color: var(--principal);
-    }
-
-    .nota {
-      text-align: center;
-      font-style: italic;
-      margin-bottom: 2rem;
-    }
-
-    .countdown {
-      text-align: center;
-      font-size: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .mapa, .checklist, .gastos, .gasto-formulario, .itinerario {
-      background: white;
-      padding: 1rem;
-      margin: 1rem auto;
-      max-width: 700px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px var(--sombra);
-    }
-
-    body.dark .mapa, body.dark .checklist, body.dark .gastos, body.dark .gasto-formulario, body.dark .itinerario {
-      background: #2a2a2a;
-    }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    li {
-      margin-bottom: 0.5rem;
-    }
-
-    input[type="checkbox"] {
-      margin-right: 0.5rem;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-
-    th, td {
-      border-bottom: 1px solid var(--sombra);
-      padding: 0.5rem;
-      text-align: left;
-    }
-
-    input, button {
-      width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.5rem;
-      border: 1px solid var(--sombra);
-      border-radius: 5px;
-      font-size: 1rem;
-    }
-
-    button {
-      background: var(--principal);
-      color: white;
-      cursor: pointer;
-    }
-
-    #modoToggle {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      padding: 0.5rem 1rem;
-      background: var(--principal);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    iframe {
-      width: 100%;
-      border: none;
-      border-radius: 10px;
-      height: 300px;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<button id="modoToggle">🌗 Cambiar tema</button>
-<h1>Viaje a Salta</h1>
-<p class="nota">Will y Abril</p>
-
-<div class="countdown">
-  ⏳ Faltan <span id="diasFaltantes">...</span> días para el viaje
-</div>
-
-<div class="itinerario">
-  <h2>📅 Itinerario</h2>
-  <ul>
-    <li>21/07 - 5:00 → Salida de Morteros a Córdoba</li>
-    <li>21/07 - 15:00 → Check-in en Airbnb en Salta</li>
-    <li>21/07 - 17:00 → Vuelo CBA → SLA (Código: HYXCBU)</li>
-    <li>29/07 - 13:00 → Check-out</li>
-    <li>29/07 - 14:50 → Vuelo SLA → CBA (Código: ZZKMSP)</li>
-    <li>29/07 - 18:15 → Regreso Córdoba → Morteros</li>
-  </ul>
-</div>
-
-<div class="gastos">
-  <h2>💸 Gastos fijos del viaje</h2>
-  <table>
-    <thead><tr><th>Concepto</th><th>Monto</th></tr></thead>
-    <tbody>
-      <tr><td>Traslado Morteros-CBA (ida)</td><td>$71.600</td></tr>
-      <tr><td>Vuelo CBA → SLA</td><td>$267.481</td></tr>
-      <tr><td>Airbnb en Salta</td><td>$220.000</td></tr>
-      <tr><td>Vuelo SLA → CBA</td><td>$137.000</td></tr>
-      <tr><td>Traslado CBA-Morteros (vuelta)</td><td>$71.600</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<div class="mapa">
-  <h2>📍 Ubicación</h2>
-  <iframe src="https://maps.google.com/maps?q=De%C3%A1n%20Funes%201380%2C%20Salta&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe>
-</div>
-
-<div class="checklist">
-  <h2>📋 Checklist de viaje</h2>
-  <ul id="listaChecklist">
-    <li><label><input type="checkbox"> Documentos</label></li>
-    <li><label><input type="checkbox"> Ropa cómoda</label></li>
-    <li><label><input type="checkbox"> Celular cargado</label></li>
-    <li><label><input type="checkbox"> Cargador de celular</label></li>
-    <li><label><input type="checkbox"> Protector solar</label></li>
-    <li><label><input type="checkbox"> Anteojos de sol</label></li>
-    <li><label><input type="checkbox"> Mochila liviana</label></li>
-    <li><label><input type="checkbox"> Zapatillas cómodas</label></li>
-    <li><label><input type="checkbox"> Mate</label></li>
-    <li><label><input type="checkbox"> Tarjetas / efectivo</label></li>
-    <li><label><input type="checkbox"> DNI / Pasajes impresos</label></li>
-    <li><label><input type="checkbox"> Auriculares</label></li>
-  </ul>
-</div>
-
-<div class="gastos">
-  <h2>💰 Gastos compartidos (registro dinámico)</h2>
-  <table id="tablaGastos">
-    <thead><tr><th>Fecha</th><th>Descripción</th><th>Monto</th></tr></thead>
-    <tbody></tbody>
-  </table>
-</div>
-
-<div class="gasto-formulario">
-  <h2>📝 Registrar gasto compartido</h2>
-  <form id="gastoForm">
-    <input type="text" name="descripcion" placeholder="Descripción" required>
-    <input type="number" name="monto" placeholder="Monto en ARS" required>
-    <button type="submit">Guardar gasto</button>
-    <p id="estado"></p>
-  </form>
-</div>
-
-<script>
-  document.getElementById("modoToggle").onclick = () => {
-    document.body.classList.toggle("dark");
-  };
-
-  const fechaObjetivo = new Date("2025-07-21");
-  const hoy = new Date();
-  const diff = fechaObjetivo - hoy;
-  const dias = Math.ceil(diff / (1000 * 60 * 60 * 24));
-  document.getElementById("diasFaltantes").innerText = dias;
-
-  async function cargarGastos() {
-    const res = await fetch("https://sheetdb.io/api/v1/99g0uuofd4gbc");
-    const datos = await res.json();
-    const cuerpo = document.querySelector("#tablaGastos tbody");
-    cuerpo.innerHTML = "";
-    datos.reverse().forEach(item => {
-      const fila = `<tr>
-        <td>${new Date(item.fecha).toLocaleDateString()}</td>
-        <td>${item.descripcion}</td>
-        <td>$${item.monto}</td>
-      </tr>`;
-      cuerpo.innerHTML += fila;
-    });
-  }
-  cargarGastos();
-
-  document.getElementById("gastoForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
-    const descripcion = this.descripcion.value;
-    const monto = this.monto.value;
-    const fecha = new Date().toISOString();
-    const data = {
-      data: {
-        fecha: fecha,
-        descripcion: descripcion,
-        monto: monto
-      }
-    };
-    const estado = document.getElementById("estado");
-    try {
-      const res = await fetch("https://sheetdb.io/api/v1/99g0uuofd4gbc", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: { "Content-Type": "application/json" }
-      });
-      if (res.ok) {
-        estado.innerText = "✅ Gasto guardado con éxito";
-        this.reset();
-        cargarGastos();
-      } else {
-        estado.innerText = "❌ Error al guardar";
-      }
-    } catch (err) {
-      estado.innerText = "❌ Error de red";
-      console.error(err);
+  <button id="modo-btn">馃寵 Modo oscuro</button>
+  <h1>Viaje a Salta</h1>
+  <div class="nota">Will y Abril 馃挄</div>
+  <div class="countdown" id="countdown">Cargando cuenta regresiva...</div>
+  <div class="mapa">
+    <iframe src="https://www.google.com/maps?q=De谩n+Funes+1380,+Salta,+Argentina&output=embed" allowfullscreen></iframe>
+  </div>
+  <div class="documentos">
+    <h2>馃搸 Documentos del viaje</h2>
+    <ul>
+      <li><a href="STC - Imprimir boleto electr贸nico-abril.pdf" target="_blank">馃 Pasaje de Abril (PDF)</a></li>
+      <li><a href="STC - Imprimir boleto electr贸nico-willi.pdf" target="_blank">馃 Pasaje de Willi (PDF)</a></li>
+    </ul>
+  </div>
+  <div class="checklist">
+    <h2>馃С Checklist de viaje</h2>
+    <ul>
+      <li><input type="checkbox"> Documentos</li>
+      <li><input type="checkbox"> Ropa c贸moda</li>
+      <li><input type="checkbox"> Celular cargado</li>
+      <li><input type="checkbox"> Cargador de celular</li>
+      <li><input type="checkbox"> Protector solar</li>
+      <li><input type="checkbox"> Anteojos de sol</li>
+      <li><input type="checkbox"> Mochila liviana</li>
+      <li><input type="checkbox"> Zapatillas c贸modas</li>
+      <li><input type="checkbox"> Mate (somos argentinos 馃槑)</li>
+      <li><input type="checkbox"> Tarjetas / efectivo</li>
+      <li><input type="checkbox"> DNI / Pasajes impresos</li>
+      <li><input type="checkbox"> Auriculares</li>
+    </ul>
+  </div>
+  <div class="gastos-remotos">
+    <h2>馃寪 Registrar gasto compartido</h2>
+    <form id="form-google">
+      <input type="text" id="descripcion" placeholder="Descripci贸n" required>
+      <input type="number" id="monto" placeholder="Monto (ARS)" required>
+      <button type="submit">Guardar gasto</button>
+    </form>
+    <p id="msg"></p>
+  </div>
+  <div class="gastos-web">
+    <h2>馃搳 Gastos cargados</h2>
+    <table id="tabla-gastos">
+      <thead>
+        <tr><th>Fecha</th><th>Descripci贸n</th><th>Monto</th></tr>
+      </thead>
+      <tbody><tr><td colspan="3">Cargando gastos...</td></tr></tbody>
+    </table>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
+  <script>
+    const countdown = document.getElementById("countdown");
+    const targetDate = new Date("2025-07-21T00:00:00").getTime();
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const d = targetDate - now;
+      if (d < 0) return countdown.innerHTML = "隆Ya comenz贸 el viaje! 鉁堬笍";
+      const days = Math.floor(d / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((d % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((d % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((d % (1000 * 60)) / 1000);
+      countdown.innerHTML = `鈴?Faltan <strong>${days}</strong>d <strong>${hours}</strong>h <strong>${minutes}</strong>m <strong>${seconds}</strong>s 鉁堬笍`;
     }
-  });
-</script>
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
 
+    document.getElementById("modo-btn").addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      localStorage.setItem("modo", document.body.classList.contains("dark") ? "dark" : "light");
+    });
+    if (localStorage.getItem("modo") === "dark") document.body.classList.add("dark");
+
+    document.getElementById("form-google").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const desc = document.getElementById("descripcion").value.trim();
+      const monto = parseFloat(document.getElementById("monto").value);
+      const msg = document.getElementById("msg");
+      msg.innerText = "Enviando...";
+      try {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbytGeiFlJS5-sRun_nNuZxA8M5xY0xmTu6MVRfUR6f_-0m7aJkErBYdmGcL9a_TIXaw-Q/exec", {
+          method: "POST",
+          body: JSON.stringify({ descripcion: desc, monto: monto }),
+          headers: { "Content-Type": "application/json" }
+        });
+        msg.innerText = res.ok ? "鉁?Gasto registrado" : "鉂?Error al enviar";
+        if (res.ok) this.reset();
+      } catch {
+        msg.innerText = "鉂?Error de conexi贸n";
+      }
+    });
+
+    function cargarGastos() {
+      Tabletop.init({
+        key: '1uWKpiLSzBQcm9HZhdUTWwTrZ-1AGWM-NojE9dk9frjk',
+        callback: function (data) {
+          const tbody = document.querySelector("#tabla-gastos tbody");
+          tbody.innerHTML = "";
+          data.reverse().forEach(row => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td>${row.Fecha}</td><td>${row.Descripci贸n}</td><td>$${parseFloat(row.Monto).toLocaleString()}</td>`;
+            tbody.appendChild(tr);
+          });
+        },
+        simpleSheet: true
+      });
+    }
+    window.addEventListener("DOMContentLoaded", cargarGastos);
+  </script>
 </body>
 </html>
-
