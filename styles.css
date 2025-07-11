@@ -1,291 +1,79 @@
-/* CSS Basico */
-@import url('https://fonts.googleapis.com/css?family=Exo:100,200,400');
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300');
-
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial;
-    font-size: 12px;
-}
-
-.body {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('http://ginva.com/wp-content/uploads/2012/07/city-skyline-wallpapers-008.jpg');
-    background-size: cover;
-    filter: blur(5px);
-    z-index: -1;
-}
-
-.grad {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 100%);
-    z-index: -1;
-}
-
-.header {
-    text-align: center;
-    color: #fff;
-    font-family: 'Exo', sans-serif;
-    font-size: 35px;
-    font-weight: 200;
-    margin-top: 20px;
-}
-
-.header div span {
-    color: #5379fa;
-}
-
-.container {
-    max-width: 400px;
-    margin: auto;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-label {
-    font-weight: bold;
-    color: #333;
-}
-
-input[type="text"],
-textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
-.primary-btn, .secondary-btn {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.primary-btn {
-    background-color: #4a90e2;
-    color: #fff;
-    margin-top: 10px;
-}
-
-.primary-btn:hover {
-    background-color: #357abd;
-}
-
-.secondary-btn {
-    background-color: #50c878;
-    color: #fff;
-    margin-top: 10px;
-}
-
-.secondary-btn:hover {
-    background-color: #3e8e41;
-}
-
-textarea {
-    resize: none;
-}
 
 :root {
-    --background-color: #ffffff;
-    --text-color: #000000;
-    --button-bg-color: #4CAF50;
-    --button-text-color: #ffffff;
+  --fondo: #fff6f6;
+  --texto: #333;
+  --principal: #bb6b6b;
+  --suave: #ffecec;
+  --tabla-header: #fcdcdc;
+  --sombra: #eecaca;
 }
-
-.dark-theme {
-    --background-color: #121212;
-    --text-color: #ffffff;
-    --button-bg-color: #3b3b3b;
-    --button-text-color: #ffffff;
+body.dark {
+  --fondo: #1e1e1e;
+  --texto: #f5f5f5;
+  --principal: #ffb3b3;
+  --suave: #333;
+  --tabla-header: #444;
+  --sombra: #000;
 }
-
 body {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    font-family: 'Exo', sans-serif;
+  background-color: var(--fondo);
+  color: var(--texto);
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 2rem;
+  transition: all 0.3s ease;
 }
-
-button {
-    background-color: var(--button-bg-color);
-    color: var(--button-text-color);
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    opacity: 0.9;
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-th {
-    background-color: var(--button-bg-color);
-    color: var(--button-text-color);
-}
-
-tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-tr:hover {
-    background-color: var(--button-bg-color);
-    color: var(--text-color);
-}
-
-.copy-btn {
-    background-color: var(--button-bg-color);
-    color: var(--button-text-color);
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 3px;
-}
-
-.copy-btn:hover {
-    background-color: #3b3b3b;
-}
-
-.mapa {
-  margin: 2rem 0;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 0 10px #e6dada;
-}
-
-.checklist {
-  background-color: #fff;
-  border-radius: 10px;
-  padding: 1rem 2rem;
-  margin-top: 2rem;
-  box-shadow: 0 0 10px #f0dede;
-}
-
-.checklist h2 {
-  color: #bb6b6b;
-  margin-bottom: 1rem;
-}
-
-.checklist ul {
-  list-style: none;
-  padding: 0;
-}
-
-.checklist li {
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-}
-
-.documentos {
-  background-color: #fff;
-  border-radius: 10px;
-  padding: 1rem 2rem;
-  margin-top: 2rem;
-  box-shadow: 0 0 10px var(--sombra);
-}
-
-body.dark .documentos {
-  background-color: #2a2a2a;
-}
-
-.documentos h2 {
+h1 {
+  text-align: center;
   color: var(--principal);
-  margin-bottom: 1rem;
 }
-
-.documentos a {
-  color: var(--principal);
-  text-decoration: none;
+button#modo-btn {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: var(--suave);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
   font-weight: bold;
+  cursor: pointer;
 }
-
-.documentos li {
-  margin-bottom: 0.5rem;
-}
-
-.gastos-remotos {
+.countdown, .mapa, .documentos, .checklist, .gastos-remotos, .gastos-web {
   background-color: #fff;
   border-radius: 10px;
   padding: 1rem 2rem;
   margin-top: 2rem;
   box-shadow: 0 0 10px var(--sombra);
 }
-
-body.dark .gastos-remotos {
+body.dark .mapa, body.dark .documentos, body.dark .checklist, body.dark .gastos-remotos, body.dark .gastos-web {
   background-color: #2a2a2a;
 }
-
-.gastos-remotos h2 {
-  color: var(--principal);
-  margin-bottom: 1rem;
+iframe {
+  width: 100%;
+  height: 300px;
+  border: 0;
 }
-
-.gastos-remotos input {
+ul { list-style: none; padding: 0; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th {
+  background-color: var(--tabla-header);
+  padding: 10px;
+}
+td {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  text-align: center;
+}
+input, button {
   margin: 0.3rem;
   padding: 0.4rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
   font-size: 1rem;
 }
-
-.gastos-remotos button {
-  padding: 0.4rem 1rem;
-  border: none;
-  background-color: var(--principal);
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.gasto-formulario {
-  background-color: #fff;
-  padding: 1rem;
-  border-radius: 10px;
-  box-shadow: 0 0 10px var(--sombra);
-  margin-top: 2rem;
-}
-
-body.dark .gasto-formulario {
-  background-color: #2a2a2a;
-}
-
-.gasto-formulario h2 {
-  color: var(--principal);
-  margin-bottom: 1rem;
+.nota {
   text-align: center;
+  font-style: italic;
+  color: #888;
 }
