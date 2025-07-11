@@ -1,119 +1,317 @@
 <!DOCTYPE html>
-<html lang="="es">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Viaje a Salta</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --fondo: #faf3f0;
+      --texto: #333;
+      --principal: #bb6b6b;
+      --suave: #fff0f3;
+      --tabla-header: #ffe5ec;
+      --sombra: #f0dede;
+    }
+
+    body.dark {
+      --fondo: #1e1e1e;
+      --texto: #f5f5f5;
+      --principal: #ffb3b3;
+      --suave: #333;
+      --tabla-header: #444;
+      --sombra: #000;
+    }
+
+    body {
+      background-color: var(--fondo);
+      color: var(--texto);
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem;
+      margin: 0;
+      transition: all 0.3s ease;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      color: var(--principal);
+    }
+
+    .nota {
+      text-align: center;
+      font-style: italic;
+      margin-bottom: 1rem;
+      color: #888;
+    }
+
+    .countdown {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--texto);
+      margin-bottom: 2rem;
+      background-color: var(--suave);
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    .mapa, .documentos, .checklist, table, .gastos-remotos {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 1rem 2rem;
+      margin-top: 2rem;
+      box-shadow: 0 0 10px var(--sombra);
+    }
+
+    body.dark .mapa,
+    body.dark .documentos,
+    body.dark .checklist,
+    body.dark .gastos-remotos,
+    body.dark table {
+      background-color: #2a2a2a;
+    }
+
+    .documentos h2,
+    .checklist h2,
+    .gastos-remotos h2 {
+      color: var(--principal);
+      margin-bottom: 1rem;
+    }
+
+    .documentos ul,
+    .checklist ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .documentos li,
+    .checklist li {
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .documentos a {
+      color: var(--principal);
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    iframe {
+      width: 100%;
+      height: 300px;
+      border: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1rem;
+      overflow: hidden;
+    }
+
+    th {
+      background-color: var(--tabla-header);
+      color: var(--texto);
+      padding: 12px;
+    }
+
+    td {
+      text-align: center;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    tfoot td {
+      font-weight: bold;
+      background-color: var(--suave);
+    }
+
+    #modo-btn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 0.5rem 1rem;
+      background-color: var(--suave);
+      color: var(--texto);
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 0 10px var(--sombra);
+      transition: 0.3s;
+      z-index: 999;
+    }
+
+    .gastos-remotos input {
+      margin: 0.3rem;
+      padding: 0.4rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .gastos-remotos button {
+      padding: 0.4rem 1rem;
+      border: none;
+      background-color: var(--principal);
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <button id="modo-btn">馃寵 Modo oscuro</button>
+  <button id="modo-btn">🌙 Modo oscuro</button>
+
   <h1>Viaje a Salta</h1>
-  <div class="nota">Will y Abril 馃挄</div>
+  <div class="nota">Will y Abril 💕</div>
+
   <div class="countdown" id="countdown">Cargando cuenta regresiva...</div>
+
   <div class="mapa">
-    <iframe src="https://www.google.com/maps?q=De谩n+Funes+1380,+Salta,+Argentina&output=embed" allowfullscreen></iframe>
+    <iframe src="https://www.google.com/maps?q=Deán+Funes+1380,+Salta,+Argentina&output=embed" allowfullscreen="" loading="lazy"></iframe>
   </div>
+
   <div class="documentos">
-    <h2>馃搸 Documentos del viaje</h2>
+    <h2>📎 Documentos del viaje</h2>
     <ul>
-      <li><a href="STC - Imprimir boleto electr贸nico-abril.pdf" target="_blank">馃 Pasaje de Abril (PDF)</a></li>
-      <li><a href="STC - Imprimir boleto electr贸nico-willi.pdf" target="_blank">馃 Pasaje de Willi (PDF)</a></li>
+      <li><a href="STC - Imprimir boleto electrónico-abril.pdf" target="_blank">🧍 Pasaje de Abril (PDF)</a></li>
+      <li><a href="STC - Imprimir boleto electrónico-willi.pdf" target="_blank">🧔 Pasaje de Willi (PDF)</a></li>
     </ul>
   </div>
+
   <div class="checklist">
-    <h2>馃С Checklist de viaje</h2>
+    <h2>🧳 Checklist de viaje</h2>
     <ul>
       <li><input type="checkbox"> Documentos</li>
-      <li><input type="checkbox"> Ropa c贸moda</li>
+      <li><input type="checkbox"> Ropa cómoda</li>
       <li><input type="checkbox"> Celular cargado</li>
       <li><input type="checkbox"> Cargador de celular</li>
       <li><input type="checkbox"> Protector solar</li>
       <li><input type="checkbox"> Anteojos de sol</li>
       <li><input type="checkbox"> Mochila liviana</li>
-      <li><input type="checkbox"> Zapatillas c贸modas</li>
-      <li><input type="checkbox"> Mate (somos argentinos 馃槑)</li>
+      <li><input type="checkbox"> Zapatillas cómodas</li>
+      <li><input type="checkbox"> Mate (somos argentinos 😎)</li>
       <li><input type="checkbox"> Tarjetas / efectivo</li>
       <li><input type="checkbox"> DNI / Pasajes impresos</li>
       <li><input type="checkbox"> Auriculares</li>
     </ul>
   </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Lugar</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Cosas para hacer</th>
+        <th>Código de vuelo</th>
+        <th>Gasto</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Salta</td><td>21/07</td><td>5:00</td><td>Salida de morteros-Cba</td><td></td><td>$71,600.00</td></tr>
+      <tr><td></td><td>21/07</td><td>17:00</td><td>Salida del avión CBA-SLA</td><td>HYXCBU</td><td>$267,481.00</td></tr>
+      <tr><td></td><td>21/07</td><td>15:00</td><td>Check-in en salta del Airbnb</td><td></td><td>$220,000.00</td></tr>
+      <tr><td></td><td>29/07</td><td>13:00</td><td>Check-out</td><td></td><td>$0.00</td></tr>
+      <tr><td></td><td>29/07</td><td>14:50</td><td>Salida SLA-CBA</td><td>ZZKMSP</td><td>$137,000.00</td></tr>
+      <tr><td></td><td>29/07</td><td>18:15</td><td>Salida Córdoba-Morteros</td><td></td><td>$71,600.00</td></tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5">Total de gastos</td>
+        <td>$767,681.00</td>
+      </tr>
+    </tfoot>
+  </table>
+
   <div class="gastos-remotos">
-    <h2>馃寪 Registrar gasto compartido</h2>
+    <h2>🌐 Registrar gasto compartido</h2>
     <form id="form-google">
-      <input type="text" id="descripcion" placeholder="Descripci贸n" required>
+      <input type="text" id="descripcion" placeholder="Descripción" required>
       <input type="number" id="monto" placeholder="Monto (ARS)" required>
       <button type="submit">Guardar gasto</button>
     </form>
     <p id="msg"></p>
   </div>
-  <div class="gastos-web">
-    <h2>馃搳 Gastos cargados</h2>
-    <table id="tabla-gastos">
-      <thead>
-        <tr><th>Fecha</th><th>Descripci贸n</th><th>Monto</th></tr>
-      </thead>
-      <tbody><tr><td colspan="3">Cargando gastos...</td></tr></tbody>
-    </table>
-  </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
+
   <script>
+    // Cuenta regresiva
     const countdown = document.getElementById("countdown");
     const targetDate = new Date("2025-07-21T00:00:00").getTime();
     function updateCountdown() {
       const now = new Date().getTime();
-      const d = targetDate - now;
-      if (d < 0) return countdown.innerHTML = "隆Ya comenz贸 el viaje! 鉁堬笍";
-      const days = Math.floor(d / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((d % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((d % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((d % (1000 * 60)) / 1000);
-      countdown.innerHTML = `鈴?Faltan <strong>${days}</strong>d <strong>${hours}</strong>h <strong>${minutes}</strong>m <strong>${seconds}</strong>s 鉁堬笍`;
+      const distance = targetDate - now;
+      if (distance < 0) {
+        countdown.innerHTML = "¡Ya comenzó el viaje! ✈️";
+        return;
+      }
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      countdown.innerHTML = `⏳ Faltan <strong>${days}</strong> días, <strong>${hours}</strong> horas, <strong>${minutes}</strong> minutos y <strong>${seconds}</strong> segundos para el viaje ✈️`;
     }
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    document.getElementById("modo-btn").addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-      localStorage.setItem("modo", document.body.classList.contains("dark") ? "dark" : "light");
+    // Botón modo oscuro
+    const btn = document.getElementById("modo-btn");
+    const body = document.body;
+    btn.addEventListener("click", () => {
+      body.classList.toggle("dark");
+      const modo = body.classList.contains("dark") ? "dark" : "light";
+      localStorage.setItem("modo", modo);
+      btn.innerText = modo === "dark" ? "☀️ Modo claro" : "🌙 Modo oscuro";
     });
-    if (localStorage.getItem("modo") === "dark") document.body.classList.add("dark");
+    window.onload = () => {
+      const savedModo = localStorage.getItem("modo");
+      if (savedModo === "dark") {
+        body.classList.add("dark");
+        btn.innerText = "☀️ Modo claro";
+      }
+    };
 
+    // Enviar gasto a Google Sheets
     document.getElementById("form-google").addEventListener("submit", async function (e) {
       e.preventDefault();
       const desc = document.getElementById("descripcion").value.trim();
       const monto = parseFloat(document.getElementById("monto").value);
       const msg = document.getElementById("msg");
+
+      if (!desc || isNaN(monto)) {
+        msg.innerText = "Campos inválidos.";
+        return;
+      }
+
       msg.innerText = "Enviando...";
+
       try {
-        const res = await fetch("https://script.google.com/macros/s/AKfycbytGeiFlJS5-sRun_nNuZxA8M5xY0xmTu6MVRfUR6f_-0m7aJkErBYdmGcL9a_TIXaw-Q/exec", {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbwdElB4lMvjiqQEtlrzlmFjChERSp9hAhA9EaXeS--xP4CpK0NcnYLUxkVCh7c3Fo1EJw/exec", {
           method: "POST",
           body: JSON.stringify({ descripcion: desc, monto: monto }),
           headers: { "Content-Type": "application/json" }
         });
-        msg.innerText = res.ok ? "鉁?Gasto registrado" : "鉂?Error al enviar";
-        if (res.ok) this.reset();
-      } catch {
-        msg.innerText = "鉂?Error de conexi贸n";
+
+        if (res.ok) {
+          msg.innerText = "✅ Gasto registrado correctamente.";
+          this.reset();
+        } else {
+          msg.innerText = "❌ Error al enviar. Intentá más tarde.";
+        }
+      } catch (err) {
+        msg.innerText = "❌ Error de conexión.";
+        console.error(err);
       }
     });
-
-    function cargarGastos() {
-      Tabletop.init({
-        key: '1uWKpiLSzBQcm9HZhdUTWwTrZ-1AGWM-NojE9dk9frjk',
-        callback: function (data) {
-          const tbody = document.querySelector("#tabla-gastos tbody");
-          tbody.innerHTML = "";
-          data.reverse().forEach(row => {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `<td>${row.Fecha}</td><td>${row.Descripci贸n}</td><td>$${parseFloat(row.Monto).toLocaleString()}</td>`;
-            tbody.appendChild(tr);
-          });
-        },
-        simpleSheet: true
-      });
-    }
-    window.addEventListener("DOMContentLoaded", cargarGastos);
   </script>
 </body>
 </html>
