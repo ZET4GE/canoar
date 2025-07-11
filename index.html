@@ -323,6 +323,7 @@
         if (res.ok) {
           msg.innerText = "✅ Gasto registrado correctamente.";
           this.reset();
+          cargarGastosSheetDB();
         } else {
           msg.innerText = "❌ Error al enviar. Intentá más tarde.";
         }
